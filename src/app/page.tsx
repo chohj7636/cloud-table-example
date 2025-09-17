@@ -1,4 +1,4 @@
-import CloudTable from '@/components/CloudTable';
+import CloudTable from '@/components/cloudTable/CloudTable';
 
 import { Cloud } from './api/types';
 
