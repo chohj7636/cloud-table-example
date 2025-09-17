@@ -14,10 +14,6 @@ interface CloudDialogInfo {
     text: string;
     clickEvent: () => void;
   };
-  cancelButton: {
-    text: string;
-    clickEvent: () => void;
-  };
 }
 
 interface CloudDialogState {
