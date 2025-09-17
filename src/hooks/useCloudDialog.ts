@@ -8,7 +8,7 @@ import { devtools } from 'zustand/middleware';
  * type 설정 값에 따라 생성, 수정 다이얼로그 선택 가능
  */
 
-interface CloudDialogState {
+interface CloudDialogInfo {
   type: 'create' | 'edit';
   confirmButton: {
     text: string;
@@ -21,8 +21,8 @@ interface CloudDialogState {
 }
 
 interface CloudDialogState {
-  dialogInfo: CloudDialogState | null;
-  cloudDialog: (dialogInfo: CloudDialogState) => void;
+  dialogInfo: CloudDialogInfo | null;
+  cloudDialog: (dialogInfo: CloudDialogInfo) => void;
   closeCloudDialog: () => void;
 }
 
