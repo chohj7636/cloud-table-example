@@ -1,6 +1,7 @@
 'use client';
 
 import { Cloud } from '@/app/api/types';
+import { useCloudDialog } from '@/hooks/useCloudDialog';
 import {
   createColumnHelper,
   flexRender,
@@ -16,8 +17,18 @@ interface CloudTableProps {
 const columnHelper = createColumnHelper<Cloud>();
 
 const CloudTable = ({ data }: CloudTableProps) => {
+  // 다이얼로그 상태 관리 훅
+  const { cloudDialog } = useCloudDialog();
+
   const handleEdit = (id: string) => {
     console.log('Edit cloud:', id);
+    cloudDialog({
+      type: 'edit',
+      confirmButton: {
+        text: '확인',
+        clickEvent: () => {},
+      },
+    });
   };
 
   const handleDelete = (id: string) => {
