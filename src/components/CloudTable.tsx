@@ -1,7 +1,5 @@
 'use client';
 
-import { useState } from 'react';
-
 import { Cloud } from '@/app/api/types';
 import {
   createColumnHelper,
@@ -11,83 +9,23 @@ import {
 } from '@tanstack/react-table';
 import { Edit, Trash2 } from 'lucide-react';
 
-// Mock 데이터
-const mockCloudData: Cloud[] = [
-  {
-    id: '1',
-    provider: 'AWS',
-    name: 'Production AWS Account',
-    cloudGroupName: ['production', 'web-services'],
-    eventProcessEnabled: true,
-    userActivityEnabled: true,
-    scheduleScanEnabled: false,
-    regionList: ['ap-northeast-2', 'us-east-1'],
-    credentials: {
-      accessKeyId: 'AKIA********18',
-      secretAccessKey: 'jZd1********0n',
-    },
-    credentialType: 'ACCESS_KEY',
-    eventSource: {
-      cloudTrailName: 'production-cloudtrail',
-    },
-  },
-  {
-    id: '2',
-    provider: 'AWS',
-    name: 'Development AWS Account',
-    cloudGroupName: ['development', 'testing'],
-    eventProcessEnabled: false,
-    userActivityEnabled: true,
-    scheduleScanEnabled: true,
-    scheduleScanSetting: {
-      frequency: 'DAY',
-      hour: '2',
-      minute: '0',
-    },
-    regionList: ['ap-northeast-2'],
-    credentials: {
-      accessKeyId: 'AKIA********99',
-      secretAccessKey: 'xyz9********4m',
-    },
-    credentialType: 'ACCESS_KEY',
-    eventSource: {
-      cloudTrailName: 'dev-cloudtrail',
-    },
-  },
-  {
-    id: '3',
-    provider: 'AWS',
-    name: 'Staging Environment',
-    cloudGroupName: ['staging'],
-    eventProcessEnabled: true,
-    userActivityEnabled: false,
-    scheduleScanEnabled: true,
-    scheduleScanSetting: {
-      frequency: 'WEEK',
-      weekday: 'MON',
-      hour: '3',
-      minute: '30',
-    },
-    regionList: ['ap-northeast-2', 'us-west-2'],
-    credentials: {
-      accessKeyId: 'AKIA********56',
-      secretAccessKey: 'abc2********7k',
-    },
-    credentialType: 'ACCESS_KEY',
-  },
-];
+interface CloudTableProps {
+  data: Cloud[];
+}
 
 const columnHelper = createColumnHelper<Cloud>();
 
-const CloudTable = () => {
-  const [data] = useState<Cloud[]>(mockCloudData);
-
+const CloudTable = ({ data }: CloudTableProps) => {
   const handleEdit = (id: string) => {
     console.log('Edit cloud:', id);
   };
 
   const handleDelete = (id: string) => {
     console.log('Delete cloud:', id);
+  };
+
+  const handleRowClick = (id: string) => {
+    console.log('Row clicked:', id);
   };
 
   const columns = [
@@ -153,7 +91,7 @@ const CloudTable = () => {
           <button
             onClick={() => handleEdit(info.row.original.id)}
             className="rounded p-1 text-blue-600 hover:bg-blue-50 hover:text-blue-700"
-            aria-label="edit"
+            aria-label="수정"
             tabIndex={0}
           >
             <Edit size={16} />
@@ -161,7 +99,7 @@ const CloudTable = () => {
           <button
             onClick={() => handleDelete(info.row.original.id)}
             className="rounded p-1 text-red-600 hover:bg-red-50 hover:text-red-700"
-            aria-label="delete"
+            aria-label="삭제"
             tabIndex={0}
           >
             <Trash2 size={16} />
@@ -212,9 +150,7 @@ const CloudTable = () => {
               <tr
                 key={row.id}
                 className="cursor-pointer hover:bg-gray-50"
-                onClick={() => {
-                  console.log('Row clicked:', row.original.id);
-                }}
+                onClick={() => handleRowClick(row.original.id)}
               >
                 {row.getVisibleCells().map((cell) => (
                   <td
