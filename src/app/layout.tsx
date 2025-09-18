@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-import CloudDialog from '@/shared/components/CloudDialog';
+import CloudDialog from '@/widgets/CloudDialog';
 
 import './globals.css';
 

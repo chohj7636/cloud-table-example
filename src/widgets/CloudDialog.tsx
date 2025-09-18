@@ -2,9 +2,8 @@
 
 import { createPortal } from 'react-dom';
 
+import { Button } from '@/shared/components/ui/button';
 import { useCloudDialog } from '@/shared/hooks/useCloudDialog';
-
-import { Button } from './ui/button';
 
 /**
  * CloudDialog 컴포넌트
