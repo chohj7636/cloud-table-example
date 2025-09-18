@@ -2,7 +2,7 @@
 
 import { createPortal } from 'react-dom';
 
-import { useCloudDialog } from '@/hooks/useCloudDialog';
+import { useCloudDialog } from '@/shared/hooks/useCloudDialog';
 
 import { Button } from './ui/button';
 

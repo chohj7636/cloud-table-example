@@ -1,7 +1,7 @@
 'use client';
 
-import { Cloud } from '@/app/api/types';
-import { useCloudDialog } from '@/hooks/useCloudDialog';
+import { useCloudDialog } from '@/shared/hooks/useCloudDialog';
+import { Cloud } from '@/shared/types/types';
 import {
   createColumnHelper,
   flexRender,
