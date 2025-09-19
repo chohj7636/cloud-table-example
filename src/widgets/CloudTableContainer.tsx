@@ -1,20 +1,47 @@
 'use client';
 
-import { getCloudListApi } from '@/features/cloudTable/cloudList/api/api';
-import { useQuery } from '@tanstack/react-query';
+import { useCallback, useMemo } from 'react';
+
+import { createCloudTableColumns } from '@/features/cloudTable/cloudList/config/columns';
+import { useCloudTable } from '@/features/cloudTable/cloudList/hooks/useCloudTable';
+import CloudTable from '@/features/cloudTable/cloudList/ui/CloudTable';
+import { useCloudDialog } from '@/shared/hooks/useCloudDialog';
 
 const CloudTableContainer = () => {
-  // 데이터 패칭
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['cloud-table'],
-    queryFn: () => getCloudListApi(),
-  });
+  // 클라우드 테이블 데이터
+  const { cloudTableData, isCloudTableLoading } = useCloudTable();
 
-  console.log(data);
+  // 다이얼로그 상태 관리 훅
+  const { cloudDialog } = useCloudDialog();
+
+  const handleEdit = useCallback(
+    (id: string) => {
+      console.log('Edit cloud:', id);
+      // 클라우드 수정 다이얼로그 띄우기
+      cloudDialog({
+        type: 'edit',
+        confirmButton: {
+          text: '확인',
+          clickEvent: () => {},
+        },
+      });
+    },
+    [cloudDialog],
+  );
+
+  const handleDelete = useCallback((id: string) => {
+    console.log('Delete cloud:', id);
+  }, []);
+
+  const columns = useMemo(
+    () => createCloudTableColumns(handleEdit, handleDelete),
+    [handleEdit, handleDelete],
+  );
 
   return (
-    <div>
-      <div>1</div>
+    <div className="w-full">
+      <CloudTable data={cloudTableData || []} columns={columns} />
+      {isCloudTableLoading && <div>Loading...</div>}
     </div>
   );
 };
