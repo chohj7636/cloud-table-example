@@ -7,10 +7,8 @@ export default async function Home() {
   const cloudData = await getCloudListApi();
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="mx-auto max-w-7xl">
-        <CloudTable data={cloudData.data as Cloud[]} />
-      </div>
+    <div className="mx-auto max-w-7xl">
+      <CloudTable data={cloudData.data as Cloud[]} />
     </div>
   );
 }

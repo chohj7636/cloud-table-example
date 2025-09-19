@@ -20,7 +20,9 @@ export default function RootLayout({
       <body className={`antialiased`}>
         <ReactQueryProvider>
           <div id="cloud-dialog"></div>
-          {children}
+          <div id="inner-container" className="min-h-screen bg-gray-50 p-8">
+            {children}
+          </div>
           <CloudDialog />
         </ReactQueryProvider>
       </body>
