@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 
 import CloudDialog from '@/widgets/CloudDialog';
 
+import { ReactQueryProvider } from './ReactQueryProvider';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -17,9 +18,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`antialiased`}>
-        <div id="cloud-dialog"></div>
-        {children}
-        <CloudDialog />
+        <ReactQueryProvider>
+          <div id="cloud-dialog"></div>
+          {children}
+          <CloudDialog />
+        </ReactQueryProvider>
       </body>
     </html>
   );
