@@ -1,14 +1,17 @@
-import { getCloudListApi } from '@/features/cloudTable/cloudList/api/api';
-import CloudTable from '@/features/cloudTable/cloudList/ui/CloudTable';
-
-import { Cloud } from '../shared/types/types';
+import CloudTableContainer from '@/widgets/CloudTableContainer';
+import PageHeader from '@/widgets/PageHeader';
 
 export default async function Home() {
-  const cloudData = await getCloudListApi();
+  // const cloudData = await getCloudListApi();
 
   return (
     <div className="mx-auto max-w-7xl">
-      <CloudTable data={cloudData.data as Cloud[]} />
+      <PageHeader
+        title="클라우드 관리"
+        description="등록된 클라우드 계정을 관리할 수 있습니다."
+      />
+      {/* <CloudTable data={cloudData.data as Cloud[]} /> */}
+      <CloudTableContainer />
     </div>
   );
 }
