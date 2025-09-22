@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-import CloudDialog from '@/widgets/CloudDialog';
+import DialogContainer from '@/widgets/DialogContainer';
 
 import { ReactQueryProvider } from './ReactQueryProvider';
 import './globals.css';
@@ -23,7 +23,7 @@ export default function RootLayout({
           <div id="inner-container" className="min-h-screen bg-gray-50 p-8">
             {children}
           </div>
-          <CloudDialog />
+          <DialogContainer />
         </ReactQueryProvider>
       </body>
     </html>
