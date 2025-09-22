@@ -1,6 +1,6 @@
 export type Provider = 'AWS' | 'AZURE' | 'GCP'; // 프로바이더 예시, AWS만 활성화
 
-const AWSRegionList = [
+export const AWSRegionList = [
   'global',
   'ap-northeast-1',
   'ap-northeast-2',
@@ -21,7 +21,7 @@ const AWSRegionList = [
   'us-west-2',
 ] as const;
 
-const CloudGroupNameList = [
+export const CloudGroupNameList = [
   'production',
   'development',
   'testing',
