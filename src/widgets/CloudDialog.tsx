@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import DialogCredentialsConfig from '@/features/dialog/ui/DIalogCredentialsConfig';
@@ -8,17 +7,8 @@ import DialogBasicConfig from '@/features/dialog/ui/DialogBasicConfig';
 import DialogDetailConfig from '@/features/dialog/ui/DialogDetailConfig';
 import DialogRegionOrNetwork from '@/features/dialog/ui/DialogRegionOrNetwork';
 import DialogScheduleScanConfig from '@/features/dialog/ui/DialogScheduleScanConfig';
-import DefaultSelect from '@/shared/components/DefaultSelect';
 import { Button } from '@/shared/components/ui/button';
-import { Input } from '@/shared/components/ui/input';
-import { Label } from '@/shared/components/ui/label';
 import { useCloudDialog } from '@/shared/hooks/useCloudDialog';
-import {
-  AWSCredentialType,
-  AWSRegionList,
-  CloudGroupNameList,
-  Provider,
-} from '@/shared/types/types';
 import { X } from 'lucide-react';
 
 /**
@@ -32,41 +22,38 @@ import { X } from 'lucide-react';
 const CloudDialog = () => {
   const { dialogInfo, closeCloudDialog } = useCloudDialog();
 
-  // state
-  const [provider, setProvider] = useState<Provider | undefined>(undefined);
-  const [credentialType, setCredentialType] = useState<string | undefined>(
-    undefined,
-  );
-  const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
-  const [proxyUrl, setProxyUrl] = useState<string>('');
-  const [scheduleScanEnabled, setScheduleScanEnabled] =
-    useState<boolean>(false);
-  const [cloudTrailName, setCloudTrailName] = useState<string>('');
-  const [selectedCloudGroups, setSelectedCloudGroups] = useState<string[]>([]);
-  const [eventProcessEnabled, setEventProcessEnabled] =
-    useState<boolean>(false);
-  const [userActivityEnabled, setUserActivityEnabled] =
-    useState<boolean>(false);
-
   /**
    * Create Cloud fields
    *
+   * 기본 설정
    * Cloud Name *
-   * Select Provider
-   * Select Key Registration Method
+   * Provider *
+   * Key Registration Method
+   *
+   * 인증
    * Credentials
    *   Access Key
    *   Secret Key
+   *
+   * 지역 및 네트워크
    * Region
    * Proxy URL
+   *
+   * 스캐닝 스케줄 설정
    * Scan Schedule Setting
-   * Set Scan Frequency
-   *    Daily()
-   *    date
-   *    Day of week
-   *    hour
-   *    minute
-   * Event Integration
+   *    Set Scan Frequency
+   *        Daily()
+   *        date
+   *        Day of week
+   *        hour
+   *        minute
+   *
+   * 고급 설정
+   * cloudGroupName 클라우드 그룹 이름
+   * Event Integration 이벤트 소스
+   * eventProcessEnabled 이벤트 처리 활성화
+   * userActivityEnabled 사용자 활동 추적
+   *
    */
 
   return dialogInfo
@@ -89,80 +76,21 @@ const CloudDialog = () => {
               </div>
 
               {/* body */}
-              {/*
-               * Create Cloud fields
-               *
-               * 기본 설정
-               * Cloud Name *
-               * Provider *
-               * Key Registration Method
-               *
-               * 인증
-               * Credentials
-               *   Access Key
-               *   Secret Key
-               *
-               * 지역 및 네트워크
-               * Region
-               * Proxy URL
-               *
-               * 스캐닝 스케줄 설정
-               * Scan Schedule Setting
-               *    Set Scan Frequency
-               *        Daily()
-               *        date
-               *        Day of week
-               *        hour
-               *        minute
-               *
-               * 고급 설정
-               * cloudGroupName 클라우드 그룹 이름
-               * Event Integration 이벤트 소스
-               * eventProcessEnabled 이벤트 처리 활성화
-               * userActivityEnabled 사용자 활동 추적
-               *
-               */}
               <div className="space-y-5 px-2">
                 {/* 기본 설정 */}
-                <DialogBasicConfig
-                  provider={provider}
-                  setProvider={setProvider}
-                />
+                <DialogBasicConfig />
 
                 {/* 인증 */}
-                <DialogCredentialsConfig
-                  provider={provider}
-                  credentialType={credentialType}
-                  setCredentialType={setCredentialType}
-                />
+                <DialogCredentialsConfig />
 
                 {/* 지역 및 네트워크 */}
-                <DialogRegionOrNetwork
-                  provider={provider}
-                  selectedRegions={selectedRegions}
-                  setSelectedRegions={setSelectedRegions}
-                  proxyUrl={proxyUrl}
-                  setProxyUrl={setProxyUrl}
-                />
+                <DialogRegionOrNetwork />
 
                 {/* 스캐닝 스케줄 설정 */}
-                <DialogScheduleScanConfig
-                  scheduleScanEnabled={scheduleScanEnabled}
-                  setScheduleScanEnabled={setScheduleScanEnabled}
-                />
+                <DialogScheduleScanConfig />
 
                 {/* 고급 설정 */}
-                <DialogDetailConfig
-                  provider={provider}
-                  selectedCloudGroups={selectedCloudGroups}
-                  setSelectedCloudGroups={setSelectedCloudGroups}
-                  eventProcessEnabled={eventProcessEnabled}
-                  userActivityEnabled={userActivityEnabled}
-                  cloudTrailName={cloudTrailName}
-                  setCloudTrailName={setCloudTrailName}
-                  setEventProcessEnabled={setEventProcessEnabled}
-                  setUserActivityEnabled={setUserActivityEnabled}
-                />
+                <DialogDetailConfig />
               </div>
             </div>
 

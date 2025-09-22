@@ -1,22 +1,12 @@
 import { Input } from '@/shared/components/ui/input';
 import { Label } from '@/shared/components/ui/label';
+import { useCloudDialog } from '@/shared/hooks/useCloudDialog';
 import { AWSRegionList, Provider } from '@/shared/types/types';
 
-interface DialogRegionOrNetworkProps {
-  provider: Provider | undefined;
-  selectedRegions: string[];
-  setSelectedRegions: (regions: string[]) => void;
-  proxyUrl: string;
-  setProxyUrl: (proxyUrl: string) => void;
-}
+const DialogRegionOrNetwork = () => {
+  // cloud zustand data
+  const { cloudData, setCloudData } = useCloudDialog();
 
-const DialogRegionOrNetwork = ({
-  provider,
-  selectedRegions,
-  setSelectedRegions,
-  proxyUrl,
-  setProxyUrl,
-}: DialogRegionOrNetworkProps) => {
   const getRegionsByProvider = (providerType: Provider) => {
     switch (providerType) {
       case 'AWS':
@@ -38,19 +28,21 @@ const DialogRegionOrNetwork = ({
       <h3 className="border-b py-2 pl-2 text-lg font-bold">지역 및 네트워크</h3>
       <div className="space-y-6 pl-4">
         {/* Region List */}
-        {provider && (
+        {cloudData.provider && (
           <div className="flex flex-col gap-2">
             <Label className="text-[16px]">Regions *</Label>
             <div className="grid grid-cols-3 gap-2 rounded-md border p-3">
-              {getRegionsByProvider(provider).map((region) => (
+              {getRegionsByProvider(cloudData.provider).map((region) => (
                 <label
                   key={region.value}
                   className="flex cursor-pointer items-center gap-2"
                 >
                   <Input
                     type="checkbox"
-                    checked={selectedRegions.includes(region.value)}
-                    onChange={() => setSelectedRegions([region.value])}
+                    checked={cloudData.regionList.includes(region.value)}
+                    onChange={() =>
+                      setCloudData({ ...cloudData, regionList: [region.value] })
+                    }
                     className="h-4 w-4"
                   />
                   <span className="text-sm">{region.label}</span>
@@ -64,8 +56,10 @@ const DialogRegionOrNetwork = ({
         <div className="flex flex-col gap-2">
           <Label>Proxy URL</Label>
           <Input
-            value={proxyUrl}
-            onChange={(e) => setProxyUrl(e.target.value)}
+            value={cloudData.proxyUrl || ''}
+            onChange={(e) =>
+              setCloudData({ ...cloudData, proxyUrl: e.target.value })
+            }
             placeholder="Enter proxy URL (optional)"
           />
         </div>

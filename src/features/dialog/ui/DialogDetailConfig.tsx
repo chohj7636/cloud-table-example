@@ -1,31 +1,18 @@
 import { Input } from '@/shared/components/ui/input';
 import { Label } from '@/shared/components/ui/label';
-import { CloudGroupNameList } from '@/shared/types/types';
+import { useCloudDialog } from '@/shared/hooks/useCloudDialog';
+import {
+  AWSEventSource,
+  AzureEventSource,
+  CloudGroupNameList,
+  GCPEventSource,
+} from '@/shared/types/types';
 import { Provider } from '@/shared/types/types';
 
-interface DialogDetailConfigProps {
-  provider: Provider | undefined;
-  selectedCloudGroups: string[];
-  setSelectedCloudGroups: (groups: string[]) => void;
-  eventProcessEnabled: boolean;
-  userActivityEnabled: boolean;
-  cloudTrailName: string;
-  setCloudTrailName: (name: string) => void;
-  setEventProcessEnabled: (enabled: boolean) => void;
-  setUserActivityEnabled: (enabled: boolean) => void;
-}
+const DialogDetailConfig = () => {
+  // cloud zustand data
+  const { cloudData, setCloudData } = useCloudDialog();
 
-const DialogDetailConfig = ({
-  provider,
-  selectedCloudGroups,
-  setSelectedCloudGroups,
-  eventProcessEnabled,
-  userActivityEnabled,
-  cloudTrailName,
-  setCloudTrailName,
-  setEventProcessEnabled,
-  setUserActivityEnabled,
-}: DialogDetailConfigProps) => {
   const printEventSourceComponent = (providerType: Provider) => {
     switch (providerType) {
       case 'AWS':
@@ -33,8 +20,17 @@ const DialogDetailConfig = ({
           <div className="flex flex-col gap-2">
             <Label>CloudTrail Name</Label>
             <Input
-              value={cloudTrailName}
-              onChange={(e) => setCloudTrailName(e.target.value)}
+              value={
+                (cloudData.eventSource as AWSEventSource)?.cloudTrailName || ''
+              }
+              onChange={(e) =>
+                setCloudData({
+                  ...cloudData,
+                  eventSource: {
+                    cloudTrailName: e.target.value,
+                  } as AWSEventSource,
+                })
+              }
               placeholder="Enter CloudTrail name"
             />
           </div>
@@ -43,14 +39,42 @@ const DialogDetailConfig = ({
         return (
           <div className="flex flex-col gap-2">
             <Label>Storage Account Name</Label>
-            <Input placeholder="Enter storage account name" />
+            <Input
+              value={
+                (cloudData.eventSource as AzureEventSource)
+                  ?.storageAccountName || ''
+              }
+              onChange={(e) =>
+                setCloudData({
+                  ...cloudData,
+                  eventSource: {
+                    storageAccountName: e.target.value,
+                  } as AzureEventSource,
+                })
+              }
+              placeholder="Enter storage account name"
+            />
           </div>
         );
       case 'GCP':
         return (
           <div className="flex flex-col gap-2">
             <Label>Storage Account Name</Label>
-            <Input placeholder="Enter storage account name" />
+            <Input
+              value={
+                (cloudData.eventSource as GCPEventSource)?.storageAccountName ||
+                ''
+              }
+              onChange={(e) =>
+                setCloudData({
+                  ...cloudData,
+                  eventSource: {
+                    storageAccountName: e.target.value,
+                  } as GCPEventSource,
+                })
+              }
+              placeholder="Enter storage account name"
+            />
           </div>
         );
       default:
@@ -63,10 +87,10 @@ const DialogDetailConfig = ({
       <h3 className="border-b py-2 text-lg font-bold">고급 설정</h3>
       <div className="space-y-6 pl-4">
         {/* Event Integration */}
-        {provider && (
+        {cloudData.provider && (
           <div className="flex flex-col gap-2">
             <Label>Event Integration</Label>
-            {printEventSourceComponent(provider)}
+            {printEventSourceComponent(cloudData.provider)}
           </div>
         )}
 
@@ -81,8 +105,18 @@ const DialogDetailConfig = ({
               >
                 <input
                   type="checkbox"
-                  checked={selectedCloudGroups.includes(group)}
-                  onChange={() => setSelectedCloudGroups([group])}
+                  checked={cloudData.cloudGroupName?.includes(group) || false}
+                  onChange={() => {
+                    const currentGroups = cloudData.cloudGroupName || [];
+                    const newGroups = currentGroups.includes(group)
+                      ? currentGroups.filter((g) => g !== group)
+                      : [...currentGroups, group];
+
+                    setCloudData({
+                      ...cloudData,
+                      cloudGroupName: newGroups,
+                    });
+                  }}
                   className="h-4 w-4"
                 />
                 <span className="text-sm capitalize">{group}</span>
@@ -99,9 +133,12 @@ const DialogDetailConfig = ({
             <input
               type="checkbox"
               id="eventProcess"
-              checked={eventProcessEnabled}
+              checked={cloudData.eventProcessEnabled}
               onChange={(e) =>
-                setEventProcessEnabled(e.target.checked as boolean)
+                setCloudData({
+                  ...cloudData,
+                  eventProcessEnabled: e.target.checked as boolean,
+                })
               }
               className="h-4 w-4"
             />
@@ -112,9 +149,12 @@ const DialogDetailConfig = ({
             <input
               type="checkbox"
               id="userActivity"
-              checked={userActivityEnabled}
+              checked={cloudData.userActivityEnabled}
               onChange={(e) =>
-                setUserActivityEnabled(e.target.checked as boolean)
+                setCloudData({
+                  ...cloudData,
+                  userActivityEnabled: e.target.checked as boolean,
+                })
               }
               className="h-4 w-4"
             />

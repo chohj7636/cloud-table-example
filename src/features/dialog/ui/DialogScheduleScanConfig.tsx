@@ -1,23 +1,12 @@
-import { useState } from 'react';
-
 import DefaultSelect from '@/shared/components/DefaultSelect';
 import { Label } from '@/shared/components/ui/label';
 import { Switch } from '@/shared/components/ui/switch';
+import { useCloudDialog } from '@/shared/hooks/useCloudDialog';
+import { ScheduleScanSetting } from '@/shared/types/types';
 
-const DialogScheduleScanConfig = ({
-  scheduleScanEnabled,
-  setScheduleScanEnabled,
-}: {
-  scheduleScanEnabled: boolean;
-  setScheduleScanEnabled: (enabled: boolean) => void;
-}) => {
-  const [frequency, setFrequency] = useState<
-    'HOUR' | 'DAY' | 'WEEK' | 'MONTH' | ''
-  >('');
-  const [date, setDate] = useState<string>('');
-  const [weekday, setWeekday] = useState<string>('');
-  const [hour, setHour] = useState<string>('');
-  const [minute, setMinute] = useState<string>('');
+const DialogScheduleScanConfig = () => {
+  // cloud zustand data
+  const { cloudData, setCloudData } = useCloudDialog();
 
   // 분 옵션 생성 (5분 단위)
   const minuteOptions = Array.from({ length: 12 }, (_, i) => {
@@ -63,12 +52,17 @@ const DialogScheduleScanConfig = ({
             </p>
           </div>
           <Switch
-            checked={scheduleScanEnabled}
-            onCheckedChange={setScheduleScanEnabled}
+            checked={cloudData.scheduleScanEnabled}
+            onCheckedChange={() =>
+              setCloudData({
+                ...cloudData,
+                scheduleScanEnabled: !cloudData.scheduleScanEnabled,
+              })
+            }
           />
         </div>
 
-        {scheduleScanEnabled && (
+        {cloudData.scheduleScanEnabled && (
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
               <Label className="text-[16px]">Set Scan Frequency</Label>
@@ -81,50 +75,87 @@ const DialogScheduleScanConfig = ({
                   { label: 'Hourly', value: 'HOUR' },
                 ]}
                 placeholder="Select frequency"
-                value={frequency}
+                value={cloudData.scheduleScanSetting?.frequency || ''}
                 onValueChange={(value) =>
-                  setFrequency(value as 'HOUR' | 'DAY' | 'WEEK' | 'MONTH')
+                  setCloudData({
+                    ...cloudData,
+                    scheduleScanSetting: {
+                      ...cloudData.scheduleScanSetting,
+                      frequency: value as 'HOUR' | 'DAY' | 'WEEK' | 'MONTH',
+                    },
+                  })
                 }
               />
             </div>
 
-            {scheduleScanEnabled && (
+            {cloudData.scheduleScanEnabled && (
               <div className="flex flex-col gap-4 pl-8">
-                {frequency === 'MONTH' && (
+                {cloudData.scheduleScanSetting?.frequency === 'MONTH' && (
                   <div className="flex flex-col gap-2">
                     <Label className="text-gray-600">Date</Label>
                     <DefaultSelect
                       className="w-full"
                       options={dateOptions}
                       placeholder="Select date"
-                      value={date}
-                      onValueChange={setDate}
+                      value={cloudData.scheduleScanSetting?.date || ''}
+                      onValueChange={(value) =>
+                        setCloudData({
+                          ...cloudData,
+                          scheduleScanSetting: {
+                            ...cloudData.scheduleScanSetting,
+                            date: value,
+                          } as ScheduleScanSetting,
+                        })
+                      }
                     />
                   </div>
                 )}
 
-                {frequency === 'WEEK' && (
+                {cloudData.scheduleScanSetting?.frequency === 'WEEK' && (
                   <div className="flex flex-col gap-2">
                     <Label className="text-gray-600">Day of Week</Label>
                     <DefaultSelect
                       className="w-full"
                       options={weekdayOptions}
                       placeholder="Select day of week"
-                      value={weekday}
-                      onValueChange={setWeekday}
+                      value={cloudData.scheduleScanSetting?.weekday || ''}
+                      onValueChange={(value) =>
+                        setCloudData({
+                          ...cloudData,
+                          scheduleScanSetting: {
+                            ...cloudData.scheduleScanSetting,
+                            weekday: value as
+                              | 'MON'
+                              | 'TUE'
+                              | 'WED'
+                              | 'THU'
+                              | 'FRI'
+                              | 'SAT'
+                              | 'SUN',
+                          } as ScheduleScanSetting,
+                        })
+                      }
                     />
                   </div>
                 )}
 
-                {frequency !== 'HOUR' && (
+                {cloudData.scheduleScanSetting?.frequency !== 'HOUR' && (
                   <div className="flex flex-col gap-2">
                     <Label className="text-gray-600">Hour</Label>
                     <DefaultSelect
                       className="w-full"
                       options={hourOptions}
                       placeholder="시간 선택"
-                      value={hour}
-                      onValueChange={setHour}
+                      value={cloudData.scheduleScanSetting?.hour || ''}
+                      onValueChange={(value) =>
+                        setCloudData({
+                          ...cloudData,
+                          scheduleScanSetting: {
+                            ...cloudData.scheduleScanSetting,
+                            hour: value,
+                          } as ScheduleScanSetting,
+                        })
+                      }
                     />
                   </div>
                 )}
@@ -134,8 +165,16 @@ const DialogScheduleScanConfig = ({
                     className="w-full"
                     options={minuteOptions}
                     placeholder="분 선택"
-                    value={minute}
-                    onValueChange={setMinute}
+                    value={cloudData.scheduleScanSetting?.minute || ''}
+                    onValueChange={(value) =>
+                      setCloudData({
+                        ...cloudData,
+                        scheduleScanSetting: {
+                          ...cloudData.scheduleScanSetting,
+                          minute: value,
+                        } as ScheduleScanSetting,
+                      })
+                    }
                   />
                 </div>
               </div>

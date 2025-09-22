@@ -42,27 +42,27 @@ export interface AWSEventSource {
 }
 
 // 타 프로바이더 예시, 미사용
-type AzureCredentialType = 'APPLICATION';
+export type AzureCredentialType = 'APPLICATION';
 
-interface AzureCredential {
+export interface AzureCredential {
   tenantId: string;
   subscriptionId: string;
   applicationId: string;
   secretKey: string;
 }
 
-interface AzureEventSource {
+export interface AzureEventSource {
   storageAccountName?: string;
 }
 
-type GCPCredentialType = 'JSON_TEXT';
+export type GCPCredentialType = 'JSON_TEXT';
 
-interface GCPCredential {
+export interface GCPCredential {
   projectId?: string;
   jsonText: string;
 }
 
-interface GCPEventSource {
+export interface GCPEventSource {
   storageAccountName?: string;
 }
 

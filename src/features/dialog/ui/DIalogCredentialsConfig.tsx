@@ -1,26 +1,34 @@
 import DefaultSelect from '@/shared/components/DefaultSelect';
 import { Input } from '@/shared/components/ui/input';
 import { Label } from '@/shared/components/ui/label';
-import { Provider } from '@/shared/types/types';
+import { useCloudDialog } from '@/shared/hooks/useCloudDialog';
+import {
+  AWSCredential,
+  AWSCredentialType,
+  AzureCredentialType,
+  GCPCredentialType,
+  Provider,
+} from '@/shared/types/types';
 
-interface DialogCredentialsConfigProps {
-  provider: Provider | undefined;
-  credentialType: string | undefined;
-  setCredentialType: (credentialType: string) => void;
-}
+const DialogCredentialsConfig = () => {
+  // cloud zustand data
+  const { cloudData, setCloudData } = useCloudDialog();
 
-const DialogCredentialsConfig = ({
-  provider,
-  credentialType,
-  setCredentialType,
-}: DialogCredentialsConfigProps) => {
   const printCredentialType = (providerType: Provider) => {
     switch (providerType) {
       case 'AWS':
         return [
-          { label: 'Access Key', value: 'ACCESS_KEY' },
-          { label: 'Assume Role', value: 'ASSUME_ROLE', disabled: true },
-          { label: 'Roles Anywhere', value: 'ROLES_ANYWHERE', disabled: true },
+          { label: 'Access Key', value: 'ACCESS_KEY' as AWSCredentialType },
+          {
+            label: 'Assume Role',
+            value: 'ASSUME_ROLE' as AWSCredentialType,
+            disabled: true,
+          },
+          {
+            label: 'Roles Anywhere',
+            value: 'ROLES_ANYWHERE' as AWSCredentialType,
+            disabled: true,
+          },
         ];
       case 'AZURE':
         return [{ label: 'Application', value: 'APPLICATION' }];
@@ -39,15 +47,50 @@ const DialogCredentialsConfig = ({
           <div className="space-y-6">
             <div className="flex flex-col gap-2">
               <Label>Access Key *</Label>
-              <Input />
+              <Input
+                value={(cloudData.credentials as AWSCredential).accessKeyId}
+                onChange={(e) =>
+                  setCloudData({
+                    ...cloudData,
+                    credentials: {
+                      ...cloudData.credentials,
+                      accessKeyId: e.target.value,
+                    },
+                  })
+                }
+              />
             </div>
             <div className="flex flex-col gap-2">
               <Label>Secret Key *</Label>
-              <Input />
+              <Input
+                value={
+                  (cloudData.credentials as AWSCredential).secretAccessKey || ''
+                }
+                onChange={(e) =>
+                  setCloudData({
+                    ...cloudData,
+                    credentials: {
+                      ...cloudData.credentials,
+                      secretAccessKey: e.target.value,
+                    },
+                  })
+                }
+              />
             </div>
             <div className="flex flex-col gap-2">
               <Label>Role ARN</Label>
-              <Input />
+              <Input
+                value={(cloudData.credentials as AWSCredential).roleArn || ''}
+                onChange={(e) =>
+                  setCloudData({
+                    ...cloudData,
+                    credentials: {
+                      ...cloudData.credentials,
+                      roleArn: e.target.value,
+                    },
+                  })
+                }
+              />
             </div>
           </div>
         );
@@ -66,20 +109,28 @@ const DialogCredentialsConfig = ({
       <div className="space-y-6 pl-4">
         <div className="flex flex-col gap-2">
           <Label className="text-[16px]">Key Registration Method *</Label>
-          {provider && (
+          {cloudData.provider && (
             <DefaultSelect
               className="w-full"
-              options={printCredentialType(provider)}
+              options={printCredentialType(cloudData.provider)}
               placeholder="credentialType"
-              value={credentialType}
-              onValueChange={setCredentialType}
+              value={cloudData.credentialType}
+              onValueChange={(type) =>
+                setCloudData({
+                  ...cloudData,
+                  credentialType: type as
+                    | AWSCredentialType
+                    | AzureCredentialType
+                    | GCPCredentialType,
+                })
+              }
             />
           )}
         </div>
         <div className="flex flex-col gap-4">
           <Label className="text-[16px]">Credentials *</Label>
           <div className="pl-4">
-            {provider && printCredentialComponent(provider)}
+            {cloudData.provider && printCredentialComponent(cloudData.provider)}
           </div>
         </div>
       </div>
