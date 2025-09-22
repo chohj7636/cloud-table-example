@@ -86,6 +86,7 @@ export interface Cloud {
   id: string; // GET 요청 시 획득
   name: string;
   provider: Provider; // AWS만 활성화
+
   // ACCESS_KEY만 활성화
   credentialType: AWSCredentialType | AzureCredentialType | GCPCredentialType; // ACCESS_KEY, ASSUME_ROLE, ROLES_ANYWHERE || APPLICATION || JSON_TEXT
   /**
@@ -93,8 +94,10 @@ export interface Cloud {
    * 예 : { accessKeyId: "AKIA********18", secretAccessKey: "jZd1********0n" }
    */
   credentials: AWSCredential | AzureCredential | GCPCredential;
+
   regionList: string[];
   proxyUrl?: string;
+
   scheduleScanEnabled: boolean;
   scheduleScanSetting?: ScheduleScanSetting; // scheduleScanEnabled = true 인 경우만 존재
   /**
