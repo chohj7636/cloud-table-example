@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import DefaultSelect from '@/shared/components/DefaultSelect';
 import { Label } from '@/shared/components/ui/label';
@@ -20,6 +20,9 @@ const DialogScheduleScanConfig: React.FC<DialogScheduleScanConfigProps> =
       setScheduleScanEnabled,
       updateScheduleScanSetting,
     }) => {
+      // state
+      const [weekdayLabel, setWeekdayLabel] = useState<string | undefined>();
+
       // 분 옵션 생성 (5분 단위)
       const minuteOptions = Array.from({ length: 12 }, (_, i) => {
         const value = (i * 5).toString();
@@ -64,6 +67,9 @@ const DialogScheduleScanConfig: React.FC<DialogScheduleScanConfigProps> =
       };
 
       const handleWeekdayChange = (value: string) => {
+        setWeekdayLabel(
+          weekdayOptions.find((option) => option.value === value)?.label,
+        );
         updateScheduleScanSetting({
           weekday: value as
             | 'MON'
@@ -82,6 +88,21 @@ const DialogScheduleScanConfig: React.FC<DialogScheduleScanConfigProps> =
 
       const handleMinuteChange = (value: string) => {
         updateScheduleScanSetting({ minute: value });
+      };
+
+      const getScanSchedule = () => {
+        switch (scheduleScanSetting?.frequency) {
+          case 'MONTH':
+            return `${scheduleScanSetting?.date ? `${scheduleScanSetting.date}일` : ''} ${scheduleScanSetting?.hour ? `${scheduleScanSetting.hour}시` : ''} ${scheduleScanSetting?.minute ? `${scheduleScanSetting.minute}분` : ''}`;
+          case 'WEEK':
+            return `${weekdayLabel ? `${weekdayLabel}` : ''} ${scheduleScanSetting?.hour ? `${scheduleScanSetting.hour}시` : ''} ${scheduleScanSetting?.minute ? `${scheduleScanSetting.minute}분` : ''}`;
+          case 'DAY':
+            return `${scheduleScanSetting?.hour ? `${scheduleScanSetting.hour}시` : ''} ${scheduleScanSetting?.minute ? `${scheduleScanSetting.minute}분` : ''}`;
+          case 'HOUR':
+            return `${scheduleScanSetting?.minute ? `${scheduleScanSetting.minute}분` : ''}`;
+          default:
+            return '';
+        }
       };
 
       return (
@@ -108,6 +129,7 @@ const DialogScheduleScanConfig: React.FC<DialogScheduleScanConfigProps> =
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-2">
                   <Label className="text-[16px]">Set Scan Frequency</Label>
+                  <p className="text-[14px] text-gray-500">{`Scan Schedule : Every ${getScanSchedule()}`}</p>
                   <DefaultSelect
                     className="w-full"
                     options={[
@@ -130,7 +152,7 @@ const DialogScheduleScanConfig: React.FC<DialogScheduleScanConfigProps> =
                         <DefaultSelect
                           className="w-full"
                           options={dateOptions}
-                          placeholder="Select date"
+                          placeholder="일 선택"
                           value={scheduleScanSetting?.date || ''}
                           onValueChange={handleDateChange}
                         />
@@ -143,7 +165,7 @@ const DialogScheduleScanConfig: React.FC<DialogScheduleScanConfigProps> =
                         <DefaultSelect
                           className="w-full"
                           options={weekdayOptions}
-                          placeholder="Select day of week"
+                          placeholder="요일 선택"
                           value={scheduleScanSetting?.weekday || ''}
                           onValueChange={handleWeekdayChange}
                         />
