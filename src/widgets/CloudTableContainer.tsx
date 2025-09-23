@@ -5,6 +5,7 @@ import { useCallback, useMemo } from 'react';
 import { createCloudTableColumns } from '@/features/cloudTable/cloudList/config/columns';
 import { useCloudTable } from '@/features/cloudTable/cloudList/hooks/useCloudTable';
 import CloudTable from '@/features/cloudTable/cloudList/ui/CloudTable';
+import { Button } from '@/shared/components/ui/button';
 import { useCloudDialog } from '@/shared/hooks/useCloudDialog';
 
 const CloudTableContainer = () => {
@@ -30,6 +31,16 @@ const CloudTableContainer = () => {
     [cloudDialog],
   );
 
+  const handleCreate = useCallback(() => {
+    cloudDialog({
+      type: 'create',
+      confirmButton: {
+        text: '확인',
+        clickEvent: () => {},
+      },
+    });
+  }, [cloudDialog]);
+
   const handleDelete = useCallback((id: string) => {
     console.log('Delete cloud:', id);
   }, []);
@@ -41,6 +52,7 @@ const CloudTableContainer = () => {
 
   return (
     <div className="w-full">
+      <Button onClick={handleCreate}>생성</Button>
       <CloudTable data={cloudTableData || []} columns={columns} />
       {isCloudTableLoading && <div>Loading...</div>}
     </div>
