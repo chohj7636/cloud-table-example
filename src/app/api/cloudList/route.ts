@@ -11,7 +11,7 @@ const mockClouds: CloudTable[] = [
     cloudGroupName: ['production'],
     eventProcessEnabled: true,
     userActivityEnabled: true,
-    regionList: ['ap-northeast-2', 'us-east-1', 'eu-west-1'],
+    regionList: ['global', 'ap-northeast-2', 'us-east-1', 'eu-west-1'],
   },
   {
     id: '2',
@@ -20,7 +20,7 @@ const mockClouds: CloudTable[] = [
     cloudGroupName: ['development', 'testing'],
     eventProcessEnabled: false,
     userActivityEnabled: true,
-    regionList: ['ap-northeast-2'],
+    regionList: ['global', 'ap-northeast-2'],
   },
   {
     id: '3',
@@ -29,7 +29,7 @@ const mockClouds: CloudTable[] = [
     cloudGroupName: ['staging'],
     eventProcessEnabled: true,
     userActivityEnabled: false,
-    regionList: ['ap-northeast-2', 'us-west-2'],
+    regionList: ['global', 'ap-northeast-2', 'us-west-2'],
   },
   {
     id: '4',
@@ -38,7 +38,7 @@ const mockClouds: CloudTable[] = [
     cloudGroupName: ['production'],
     eventProcessEnabled: true,
     userActivityEnabled: true,
-    regionList: ['Korea Central', 'East US', 'West Europe'],
+    regionList: ['global', 'Korea Central', 'East US', 'West Europe'],
   },
   {
     id: '5',
@@ -47,7 +47,7 @@ const mockClouds: CloudTable[] = [
     cloudGroupName: ['development'],
     eventProcessEnabled: false,
     userActivityEnabled: false,
-    regionList: ['Korea Central'],
+    regionList: ['global', 'Korea Central'],
   },
   {
     id: '6',
@@ -56,7 +56,7 @@ const mockClouds: CloudTable[] = [
     cloudGroupName: ['production'],
     eventProcessEnabled: true,
     userActivityEnabled: true,
-    regionList: ['asia-northeast3', 'us-central1'],
+    regionList: ['global', 'asia-northeast3', 'us-central1'],
   },
   {
     id: '7',
@@ -65,7 +65,7 @@ const mockClouds: CloudTable[] = [
     cloudGroupName: ['analytics'],
     eventProcessEnabled: true,
     userActivityEnabled: false,
-    regionList: ['asia-northeast3', 'us-west1', 'europe-west1'],
+    regionList: ['global', 'asia-northeast3', 'us-west1', 'europe-west1'],
   },
   {
     id: '8',

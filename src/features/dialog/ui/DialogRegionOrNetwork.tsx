@@ -31,7 +31,15 @@ const DialogRegionOrNetwork: React.FC<DialogRegionOrNetworkProps> = React.memo(
     };
 
     const handleRegionChange = (regionValue: string) => {
-      setRegionList([regionValue]);
+      if (regionValue === 'global') {
+        return;
+      }
+
+      if (regionList.includes(regionValue)) {
+        setRegionList(regionList.filter((region) => region !== regionValue));
+      } else {
+        setRegionList([...regionList, regionValue]);
+      }
     };
 
     const handleProxyUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
