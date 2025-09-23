@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import { useEditCloudInfo } from '@/features/dialog/hooks/useEditCloudInfo';
@@ -37,6 +37,8 @@ import { X } from 'lucide-react';
  */
 
 const CloudDialog = () => {
+  const backgroundRef = useRef<HTMLDivElement>(null);
+  // cloud dialog hook
   const { dialogInfo, closeCloudDialog } = useCloudDialog();
 
   // edit 모드 일 때만 query 호출
@@ -169,6 +171,52 @@ const CloudDialog = () => {
     closeCloudDialog();
   };
 
+  // 다이얼로그가 열릴 때 배경 스크롤을 방지하는 효과
+  useEffect(() => {
+    // 현재 스크롤 위치 저장
+    const scrollY = window.scrollY;
+
+    // 다이얼로그가 열릴 때 body를 고정하고 현재 스크롤 위치를 저장
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.overflow = 'hidden';
+    document.body.style.width = '100%';
+
+    return () => {
+      // 다이얼로그가 닫힐 때 원래 스크롤 위치로 복원
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.overflow = '';
+      document.body.style.width = '';
+      window.scrollTo(0, scrollY);
+    };
+  }, []);
+
+  // background 클릭 시 닫기
+  const handleBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (backgroundRef.current && backgroundRef.current === e.target) {
+      closeCloudDialog();
+    }
+  };
+
+  // esc 키로 닫기
+  useEffect(() => {
+    const handleEscapeKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        closeCloudDialog();
+      }
+    };
+
+    window.addEventListener('keydown', handleEscapeKey);
+    return () => {
+      window.removeEventListener('keydown', handleEscapeKey);
+    };
+  }, []);
+
   /**
    * Create Cloud fields
    *
@@ -205,7 +253,11 @@ const CloudDialog = () => {
 
   return dialogInfo
     ? createPortal(
-        <div className="fixed top-0 left-0 h-screen w-full bg-[rgba(0,0,0,0.6)]">
+        <div
+          ref={backgroundRef}
+          className="fixed top-0 left-0 h-screen w-full bg-[rgba(0,0,0,0.6)]"
+          onClick={handleBackgroundClick}
+        >
           <div
             id="dialog-layout"
             className="fixed top-1/2 left-1/2 flex h-5/6 w-3xl translate-x-[-50%] translate-y-[-50%] flex-col justify-between rounded-lg bg-white p-5"
