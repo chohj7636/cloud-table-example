@@ -95,7 +95,7 @@ const mockCloudDetails: Cloud[] = [
       applicationId: 'abcdef12-****-****-****-********3456',
       secretKey: 'xyz789********ABC123',
     } as AzureCredential,
-    regionList: ['global', 'Korea Central', 'East US', 'West Europe'],
+    regionList: ['global', 'ap-northeast-2', 'us-west-2'],
     proxyUrl: '',
     scheduleScanEnabled: true,
     scheduleScanSetting: {
@@ -121,7 +121,7 @@ const mockCloudDetails: Cloud[] = [
       applicationId: '55555555-****-****-****-********6666',
       secretKey: 'dev123********XYZ789',
     } as AzureCredential,
-    regionList: ['global', 'Korea Central'],
+    regionList: ['global', 'ap-northeast-2'],
     proxyUrl: '',
     scheduleScanEnabled: false,
     scheduleScanSetting: undefined,
@@ -142,7 +142,7 @@ const mockCloudDetails: Cloud[] = [
       jsonText:
         '{"type": "service_account", "project_id": "gcp-prod-project-123456", "private_key_id": "****", "private_key": "-----BEGIN PRIVATE KEY-----\\n****\\n-----END PRIVATE KEY-----\\n", "client_email": "****@gcp-prod-project-123456.iam.gserviceaccount.com"}',
     } as GCPCredential,
-    regionList: ['global', 'asia-northeast3', 'us-central1'],
+    regionList: ['global', 'ap-northeast-2'],
     proxyUrl: '',
     scheduleScanEnabled: true,
     scheduleScanSetting: {
@@ -166,7 +166,7 @@ const mockCloudDetails: Cloud[] = [
       jsonText:
         '{"type": "service_account", "project_id": "gcp-analytics-789012", "private_key_id": "****", "private_key": "-----BEGIN PRIVATE KEY-----\\n****\\n-----END PRIVATE KEY-----\\n", "client_email": "****@gcp-analytics-789012.iam.gserviceaccount.com"}',
     } as GCPCredential,
-    regionList: ['global', 'asia-northeast3', 'us-west1', 'europe-west1'],
+    regionList: ['global', 'us-east-1', 'ap-northeast-2'],
     proxyUrl: 'https://proxy.analytics.company.com:3128',
     scheduleScanEnabled: true,
     scheduleScanSetting: {

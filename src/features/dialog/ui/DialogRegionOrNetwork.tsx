@@ -22,9 +22,15 @@ const DialogRegionOrNetwork: React.FC<DialogRegionOrNetworkProps> = React.memo(
             value: region,
           }));
         case 'AZURE':
-          return []; // Azure regions not implemented
+          return AWSRegionList.map((region) => ({
+            label: region,
+            value: region,
+          }));
         case 'GCP':
-          return []; // GCP regions not implemented
+          return AWSRegionList.map((region) => ({
+            label: region,
+            value: region,
+          }));
         default:
           return [];
       }
@@ -53,27 +59,25 @@ const DialogRegionOrNetwork: React.FC<DialogRegionOrNetworkProps> = React.memo(
         </h3>
         <div className="space-y-6 pl-4">
           {/* Region List */}
-          {provider && (
-            <div className="flex flex-col gap-2">
-              <Label className="text-[16px]">Regions *</Label>
-              <div className="grid grid-cols-3 gap-2 rounded-md border p-3">
-                {getRegionsByProvider(provider).map((region) => (
-                  <label
-                    key={region.value}
-                    className="flex cursor-pointer items-center gap-2"
-                  >
-                    <Input
-                      type="checkbox"
-                      checked={regionList.includes(region.value)}
-                      onChange={() => handleRegionChange(region.value)}
-                      className="h-4 w-4"
-                    />
-                    <span className="text-sm">{region.label}</span>
-                  </label>
-                ))}
-              </div>
+          <div className="flex flex-col gap-2">
+            <Label className="text-[16px]">Regions *</Label>
+            <div className="grid grid-cols-3 gap-2 rounded-md border p-3">
+              {getRegionsByProvider(provider).map((region) => (
+                <label
+                  key={region.value}
+                  className="flex cursor-pointer items-center gap-2"
+                >
+                  <Input
+                    type="checkbox"
+                    checked={regionList.includes(region.value)}
+                    onChange={() => handleRegionChange(region.value)}
+                    className="h-4 w-4"
+                  />
+                  <span className="text-sm">{region.label}</span>
+                </label>
+              ))}
             </div>
-          )}
+          </div>
 
           {/* Proxy URL */}
           <div className="flex flex-col gap-2">

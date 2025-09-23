@@ -38,7 +38,7 @@ const mockClouds: CloudTable[] = [
     cloudGroupName: ['production'],
     eventProcessEnabled: true,
     userActivityEnabled: true,
-    regionList: ['global', 'Korea Central', 'East US', 'West Europe'],
+    regionList: ['global', 'ap-northeast-2', 'us-west-2'],
   },
   {
     id: '5',
@@ -47,7 +47,7 @@ const mockClouds: CloudTable[] = [
     cloudGroupName: ['development'],
     eventProcessEnabled: false,
     userActivityEnabled: false,
-    regionList: ['global', 'Korea Central'],
+    regionList: ['global', 'ap-northeast-2'],
   },
   {
     id: '6',
@@ -56,7 +56,7 @@ const mockClouds: CloudTable[] = [
     cloudGroupName: ['production'],
     eventProcessEnabled: true,
     userActivityEnabled: true,
-    regionList: ['global', 'asia-northeast3', 'us-central1'],
+    regionList: ['global', 'ap-northeast-2'],
   },
   {
     id: '7',
@@ -65,7 +65,7 @@ const mockClouds: CloudTable[] = [
     cloudGroupName: ['analytics'],
     eventProcessEnabled: true,
     userActivityEnabled: false,
-    regionList: ['global', 'asia-northeast3', 'us-west1', 'europe-west1'],
+    regionList: ['global', 'us-east-1', 'ap-northeast-2'],
   },
   {
     id: '8',
