@@ -143,7 +143,22 @@ const CloudDialog = () => {
       regionList,
       proxyUrl,
       scheduleScanEnabled,
-      scheduleScanSetting,
+      scheduleScanSetting: {
+        frequency: scheduleScanSetting?.frequency,
+        date:
+          scheduleScanSetting?.frequency === 'MONTH'
+            ? scheduleScanSetting?.date
+            : undefined,
+        weekday:
+          scheduleScanSetting?.frequency === 'WEEK'
+            ? scheduleScanSetting?.weekday
+            : undefined,
+        hour:
+          scheduleScanSetting?.frequency !== 'HOUR'
+            ? scheduleScanSetting?.hour
+            : undefined,
+        minute: scheduleScanSetting?.minute,
+      },
       eventSource,
       cloudGroupName,
       eventProcessEnabled,
