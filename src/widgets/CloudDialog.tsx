@@ -209,71 +209,67 @@ const CloudDialog = () => {
             id="dialog-layout"
             className="fixed top-1/2 left-1/2 flex h-5/6 w-3xl translate-x-[-50%] translate-y-[-50%] flex-col justify-between rounded-lg bg-white p-5"
           >
+            {/* header */}
+            <div className="my-4 flex w-full items-center justify-between">
+              <h2 className="text-2xl font-bold">
+                {dialogInfo.type === 'create' ? 'Create Cloud' : 'Edit Cloud'}
+              </h2>
+              <Button variant="ghost" onClick={closeCloudDialog}>
+                <X size={20} />
+              </Button>
+            </div>
             {/* inner */}
-            <div className="w-full flex-1 overflow-y-auto">
-              {/* header */}
-              <div className="my-4 flex w-full items-center justify-between">
-                <h2 className="text-2xl font-bold">
-                  {dialogInfo.type === 'create' ? 'Create Cloud' : 'Edit Cloud'}
-                </h2>
-                <Button variant="ghost" onClick={closeCloudDialog}>
-                  <X size={20} />
-                </Button>
-              </div>
+            <div className="w-full flex-1 space-y-5 overflow-y-auto px-2">
+              {/* 기본 설정 */}
+              <DialogBasicConfig
+                name={name}
+                provider={provider}
+                setName={setName}
+                setProvider={setProvider}
+              />
 
-              {/* body */}
-              <div className="space-y-5 px-2">
-                {/* 기본 설정 */}
-                <DialogBasicConfig
-                  name={name}
-                  provider={provider}
-                  setName={setName}
-                  setProvider={setProvider}
-                />
+              {/* 인증 */}
+              <DialogCredentialsConfig
+                provider={provider}
+                credentialType={credentialType}
+                credentials={credentials}
+                setCredentialType={setCredentialType}
+                updateCredentials={updateCredentials}
+              />
 
-                {/* 인증 */}
-                <DialogCredentialsConfig
-                  provider={provider}
-                  credentialType={credentialType}
-                  credentials={credentials}
-                  setCredentialType={setCredentialType}
-                  updateCredentials={updateCredentials}
-                />
+              {/* 지역 및 네트워크 */}
+              <DialogRegionOrNetwork
+                provider={provider}
+                regionList={regionList}
+                proxyUrl={proxyUrl}
+                setRegionList={setRegionList}
+                setProxyUrl={setProxyUrl}
+              />
 
-                {/* 지역 및 네트워크 */}
-                <DialogRegionOrNetwork
-                  provider={provider}
-                  regionList={regionList}
-                  proxyUrl={proxyUrl}
-                  setRegionList={setRegionList}
-                  setProxyUrl={setProxyUrl}
-                />
+              {/* 스캐닝 스케줄 설정 */}
+              <DialogScheduleScanConfig
+                scheduleScanEnabled={scheduleScanEnabled}
+                scheduleScanSetting={scheduleScanSetting}
+                setScheduleScanEnabled={setScheduleScanEnabled}
+                updateScheduleScanSetting={updateScheduleScanSetting}
+              />
 
-                {/* 스캐닝 스케줄 설정 */}
-                <DialogScheduleScanConfig
-                  scheduleScanEnabled={scheduleScanEnabled}
-                  scheduleScanSetting={scheduleScanSetting}
-                  setScheduleScanEnabled={setScheduleScanEnabled}
-                  updateScheduleScanSetting={updateScheduleScanSetting}
-                />
-
-                {/* 고급 설정 */}
-                <DialogDetailConfig
-                  provider={provider}
-                  eventSource={eventSource}
-                  cloudGroupName={cloudGroupName}
-                  eventProcessEnabled={eventProcessEnabled}
-                  userActivityEnabled={userActivityEnabled}
-                  updateEventSource={updateEventSource}
-                  setCloudGroupName={setCloudGroupName}
-                  setEventProcessEnabled={setEventProcessEnabled}
-                  setUserActivityEnabled={setUserActivityEnabled}
-                />
-              </div>
+              {/* 고급 설정 */}
+              <DialogDetailConfig
+                provider={provider}
+                eventSource={eventSource}
+                cloudGroupName={cloudGroupName}
+                eventProcessEnabled={eventProcessEnabled}
+                userActivityEnabled={userActivityEnabled}
+                updateEventSource={updateEventSource}
+                setCloudGroupName={setCloudGroupName}
+                setEventProcessEnabled={setEventProcessEnabled}
+                setUserActivityEnabled={setUserActivityEnabled}
+              />
             </div>
 
             {/* 버튼 그룹 */}
-            <div className="mt-8 grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-2 pt-4">
               <Button onClick={closeCloudDialog}>취소</Button>
               <Button onClick={onClickTest}>
                 {dialogInfo.confirmButton.text}
