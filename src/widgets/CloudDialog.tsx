@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
+import { useEditCloudInfo } from '@/features/dialog/hooks/useEditCloudInfo';
 import DialogCredentialsConfig from '@/features/dialog/ui/DIalogCredentialsConfig';
 import DialogBasicConfig from '@/features/dialog/ui/DialogBasicConfig';
 import DialogDetailConfig from '@/features/dialog/ui/DialogDetailConfig';
@@ -36,6 +37,13 @@ import { X } from 'lucide-react';
 
 const CloudDialog = () => {
   const { dialogInfo, closeCloudDialog } = useCloudDialog();
+
+  // edit 모드 일 때만 query 호출
+  const { cloudInfoData, isCloudInfoLoading, cloudInfoError } =
+    useEditCloudInfo(
+      dialogInfo?.editCloudId || '',
+      dialogInfo?.type === 'edit' && !!dialogInfo?.editCloudId,
+    );
 
   // 각 필드별 개별 state
   const [id, setId] = useState(initialCloudData.id);
@@ -72,12 +80,24 @@ const CloudDialog = () => {
     initialCloudData.userActivityEnabled,
   );
 
-  // 다이얼로그가 열릴 때 초기 데이터 설정
+  // API에서 받은 데이터를 폼 상태에 반영
   useEffect(() => {
-    if (dialogInfo && dialogInfo.type === 'edit') {
-      // Edit 일때 state 업데이트 해주자
+    if (cloudInfoData && dialogInfo?.type === 'edit') {
+      setId(cloudInfoData.id);
+      setName(cloudInfoData.name);
+      setProvider(cloudInfoData.provider);
+      setCredentialType(cloudInfoData.credentialType);
+      setCredentials(cloudInfoData.credentials);
+      setRegionList(cloudInfoData.regionList);
+      setProxyUrl(cloudInfoData.proxyUrl);
+      setScheduleScanEnabled(cloudInfoData.scheduleScanEnabled);
+      setScheduleScanSetting(cloudInfoData.scheduleScanSetting);
+      setEventSource(cloudInfoData.eventSource);
+      setCloudGroupName(cloudInfoData.cloudGroupName);
+      setEventProcessEnabled(cloudInfoData.eventProcessEnabled);
+      setUserActivityEnabled(cloudInfoData.userActivityEnabled);
     }
-  }, [dialogInfo]);
+  }, [cloudInfoData, dialogInfo?.type]);
 
   // 중첩 객체 업데이트를 위한 헬퍼 함수들
   const updateCredentials = useCallback(
