@@ -9,6 +9,7 @@ import DialogBasicConfig from '@/features/dialog/ui/DialogBasicConfig';
 import DialogDetailConfig from '@/features/dialog/ui/DialogDetailConfig';
 import DialogRegionOrNetwork from '@/features/dialog/ui/DialogRegionOrNetwork';
 import DialogScheduleScanConfig from '@/features/dialog/ui/DialogScheduleScanConfig';
+import DialogSkeleton from '@/shared/components/skeleton/DIalogSkeleton';
 import { Button } from '@/shared/components/ui/button';
 import { useCloudDialog } from '@/shared/hooks/useCloudDialog';
 import {
@@ -219,54 +220,58 @@ const CloudDialog = () => {
               </Button>
             </div>
             {/* inner */}
-            <div className="w-full flex-1 space-y-5 overflow-y-auto px-2">
-              {/* 기본 설정 */}
-              <DialogBasicConfig
-                name={name}
-                provider={provider}
-                setName={setName}
-                setProvider={setProvider}
-              />
+            {isCloudInfoLoading ? (
+              <DialogSkeleton />
+            ) : (
+              <div className="w-full flex-1 space-y-5 overflow-y-auto px-2">
+                {/* 기본 설정 */}
+                <DialogBasicConfig
+                  name={name}
+                  provider={provider}
+                  setName={setName}
+                  setProvider={setProvider}
+                />
 
-              {/* 인증 */}
-              <DialogCredentialsConfig
-                provider={provider}
-                credentialType={credentialType}
-                credentials={credentials}
-                setCredentialType={setCredentialType}
-                updateCredentials={updateCredentials}
-              />
+                {/* 인증 */}
+                <DialogCredentialsConfig
+                  provider={provider}
+                  credentialType={credentialType}
+                  credentials={credentials}
+                  setCredentialType={setCredentialType}
+                  updateCredentials={updateCredentials}
+                />
 
-              {/* 지역 및 네트워크 */}
-              <DialogRegionOrNetwork
-                provider={provider}
-                regionList={regionList}
-                proxyUrl={proxyUrl}
-                setRegionList={setRegionList}
-                setProxyUrl={setProxyUrl}
-              />
+                {/* 지역 및 네트워크 */}
+                <DialogRegionOrNetwork
+                  provider={provider}
+                  regionList={regionList}
+                  proxyUrl={proxyUrl}
+                  setRegionList={setRegionList}
+                  setProxyUrl={setProxyUrl}
+                />
 
-              {/* 스캐닝 스케줄 설정 */}
-              <DialogScheduleScanConfig
-                scheduleScanEnabled={scheduleScanEnabled}
-                scheduleScanSetting={scheduleScanSetting}
-                setScheduleScanEnabled={setScheduleScanEnabled}
-                updateScheduleScanSetting={updateScheduleScanSetting}
-              />
+                {/* 스캐닝 스케줄 설정 */}
+                <DialogScheduleScanConfig
+                  scheduleScanEnabled={scheduleScanEnabled}
+                  scheduleScanSetting={scheduleScanSetting}
+                  setScheduleScanEnabled={setScheduleScanEnabled}
+                  updateScheduleScanSetting={updateScheduleScanSetting}
+                />
 
-              {/* 고급 설정 */}
-              <DialogDetailConfig
-                provider={provider}
-                eventSource={eventSource}
-                cloudGroupName={cloudGroupName}
-                eventProcessEnabled={eventProcessEnabled}
-                userActivityEnabled={userActivityEnabled}
-                updateEventSource={updateEventSource}
-                setCloudGroupName={setCloudGroupName}
-                setEventProcessEnabled={setEventProcessEnabled}
-                setUserActivityEnabled={setUserActivityEnabled}
-              />
-            </div>
+                {/* 고급 설정 */}
+                <DialogDetailConfig
+                  provider={provider}
+                  eventSource={eventSource}
+                  cloudGroupName={cloudGroupName}
+                  eventProcessEnabled={eventProcessEnabled}
+                  userActivityEnabled={userActivityEnabled}
+                  updateEventSource={updateEventSource}
+                  setCloudGroupName={setCloudGroupName}
+                  setEventProcessEnabled={setEventProcessEnabled}
+                  setUserActivityEnabled={setUserActivityEnabled}
+                />
+              </div>
+            )}
 
             {/* 버튼 그룹 */}
             <div className="grid grid-cols-2 gap-2 pt-4">
