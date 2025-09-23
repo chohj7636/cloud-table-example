@@ -1,27 +1,17 @@
 import { NextResponse } from 'next/server';
 
-import type { Cloud } from '../types';
-import { GetCloudTableResponse } from './type';
+import { CloudTable } from '@/features/cloudTable/cloudList/api/type';
 
 // 테스트용 목 데이터
-const mockClouds: Cloud[] = [
+const mockClouds: CloudTable[] = [
   {
     id: '1',
     provider: 'AWS',
     name: 'Production AWS Account',
-    cloudGroupName: ['production', 'web-services'],
+    cloudGroupName: ['production'],
     eventProcessEnabled: true,
     userActivityEnabled: true,
-    scheduleScanEnabled: false,
-    regionList: ['ap-northeast-2', 'us-east-1'],
-    credentials: {
-      accessKeyId: 'AKIA********18',
-      secretAccessKey: 'jZd1********0n',
-    },
-    credentialType: 'ACCESS_KEY',
-    eventSource: {
-      cloudTrailName: 'production-cloudtrail',
-    },
+    regionList: ['global', 'ap-northeast-2', 'us-east-1', 'eu-west-1'],
   },
   {
     id: '2',
@@ -30,21 +20,7 @@ const mockClouds: Cloud[] = [
     cloudGroupName: ['development', 'testing'],
     eventProcessEnabled: false,
     userActivityEnabled: true,
-    scheduleScanEnabled: true,
-    scheduleScanSetting: {
-      frequency: 'DAY',
-      hour: '2',
-      minute: '0',
-    },
-    regionList: ['ap-northeast-2'],
-    credentials: {
-      accessKeyId: 'AKIA********99',
-      secretAccessKey: 'xyz9********4m',
-    },
-    credentialType: 'ACCESS_KEY',
-    eventSource: {
-      cloudTrailName: 'dev-cloudtrail',
-    },
+    regionList: ['global', 'ap-northeast-2'],
   },
   {
     id: '3',
@@ -53,41 +29,66 @@ const mockClouds: Cloud[] = [
     cloudGroupName: ['staging'],
     eventProcessEnabled: true,
     userActivityEnabled: false,
-    scheduleScanEnabled: true,
-    scheduleScanSetting: {
-      frequency: 'WEEK',
-      weekday: 'MON',
-      hour: '3',
-      minute: '30',
-    },
-    regionList: ['ap-northeast-2', 'us-west-2'],
-    credentials: {
-      accessKeyId: 'AKIA********56',
-      secretAccessKey: 'abc2********7k',
-    },
-    credentialType: 'ACCESS_KEY',
+    regionList: ['global', 'ap-northeast-2', 'us-west-2'],
+  },
+  {
+    id: '4',
+    provider: 'AZURE',
+    name: 'Azure Production Subscription',
+    cloudGroupName: ['production'],
+    eventProcessEnabled: true,
+    userActivityEnabled: true,
+    regionList: ['global', 'ap-northeast-2', 'us-west-2'],
+  },
+  {
+    id: '5',
+    provider: 'AZURE',
+    name: 'Azure Dev/Test Subscription',
+    cloudGroupName: ['development'],
+    eventProcessEnabled: false,
+    userActivityEnabled: false,
+    regionList: ['global', 'ap-northeast-2'],
+  },
+  {
+    id: '6',
+    provider: 'GCP',
+    name: 'GCP Production Project',
+    cloudGroupName: ['production'],
+    eventProcessEnabled: true,
+    userActivityEnabled: true,
+    regionList: ['global', 'ap-northeast-2'],
+  },
+  {
+    id: '7',
+    provider: 'GCP',
+    name: 'GCP Analytics Project',
+    cloudGroupName: ['analytics'],
+    eventProcessEnabled: true,
+    userActivityEnabled: false,
+    regionList: ['global', 'us-east-1', 'ap-northeast-2'],
+  },
+  {
+    id: '8',
+    provider: 'AWS',
+    name: 'AWS Security Account',
+    cloudGroupName: ['security'],
+    eventProcessEnabled: true,
+    userActivityEnabled: true,
+    regionList: ['global', 'us-east-1', 'ap-northeast-2'],
   },
 ];
 
 export async function GET() {
   try {
     // 실제 API 응답처럼 약간의 지연 추가
-    await new Promise((resolve) => setTimeout(resolve, 800));
-
-    console.log(
-      '✅ GET /api/clouds 호출됨 - 총',
-      mockClouds.length,
-      '개의 클라우드 반환',
-    );
+    await new Promise((resolve) => setTimeout(resolve, 500));
 
     return NextResponse.json({
-      success: true,
       data: mockClouds,
-      count: mockClouds.length,
       timestamp: new Date().toISOString(),
-    }) as GetCloudTableResponse;
+    });
   } catch (error) {
-    console.error('❌ API 에러:', error);
+    console.error(error);
 
     return NextResponse.json(
       {
@@ -96,6 +97,6 @@ export async function GET() {
         timestamp: new Date().toISOString(),
       },
       { status: 500 },
-    ) as GetCloudTableResponse;
+    );
   }
 }

@@ -1,6 +1,6 @@
 export type Provider = 'AWS' | 'AZURE' | 'GCP'; // 프로바이더 예시, AWS만 활성화
 
-const AWSRegionList = [
+export const AWSRegionList = [
   'global',
   'ap-northeast-1',
   'ap-northeast-2',
@@ -21,6 +21,14 @@ const AWSRegionList = [
   'us-west-2',
 ] as const;
 
+export const CloudGroupNameList = [
+  'production',
+  'development',
+  'testing',
+  'staging',
+  'analytics',
+] as const;
+
 export type AWSCredentialType = 'ACCESS_KEY' | 'ASSUME_ROLE' | 'ROLES_ANYWHERE'; // AWS 크리덴셜 타입 예시, ACCESS_KEY만 활성화
 
 export interface AWSCredential {
@@ -34,27 +42,27 @@ export interface AWSEventSource {
 }
 
 // 타 프로바이더 예시, 미사용
-type AzureCredentialType = 'APPLICATION';
+export type AzureCredentialType = 'APPLICATION';
 
-interface AzureCredential {
+export interface AzureCredential {
   tenantId: string;
   subscriptionId: string;
   applicationId: string;
   secretKey: string;
 }
 
-interface AzureEventSource {
+export interface AzureEventSource {
   storageAccountName?: string;
 }
 
-type GCPCredentialType = 'JSON_TEXT';
+export type GCPCredentialType = 'JSON_TEXT';
 
-interface GCPCredential {
+export interface GCPCredential {
   projectId?: string;
   jsonText: string;
 }
 
-interface GCPEventSource {
+export interface GCPEventSource {
   storageAccountName?: string;
 }
 
@@ -76,23 +84,50 @@ export interface ScheduleScanSetting {
 // 상세 정보 불러오는 API를 GET, 저장하는 API를 PUT으로 가정
 export interface Cloud {
   id: string; // GET 요청 시 획득
-  provider: Provider;
   name: string;
-  cloudGroupName?: string[]; // 선택 가능한 cloudGroupName 목록을 서버에서 받아야하지만, 편의상 상수로 선언하여 사용
-  eventProcessEnabled: boolean;
-  userActivityEnabled: boolean;
-  scheduleScanEnabled: boolean;
-  scheduleScanSetting?: ScheduleScanSetting; // scheduleScanEnabled = true 인 경우만 존재
-  regionList: string[];
-  proxyUrl?: string;
+  provider: Provider; // AWS만 활성화
+
+  // ACCESS_KEY만 활성화
+  credentialType: AWSCredentialType | AzureCredentialType | GCPCredentialType; // ACCESS_KEY, ASSUME_ROLE, ROLES_ANYWHERE || APPLICATION || JSON_TEXT
   /**
    * 비밀 값이라 GET 요쳥 시 마스킹 상태로 데이터 전송됨. 마스킹된 값을 UI에서 어떻게 활용할지는 자유
    * 예 : { accessKeyId: "AKIA********18", secretAccessKey: "jZd1********0n" }
    */
   credentials: AWSCredential | AzureCredential | GCPCredential;
-  credentialType: AWSCredentialType | AzureCredentialType | GCPCredentialType;
+
+  regionList: string[];
+  proxyUrl?: string;
+
+  scheduleScanEnabled: boolean;
+  scheduleScanSetting?: ScheduleScanSetting; // scheduleScanEnabled = true 인 경우만 존재
   /**
    * 비밀 값이 아니라 마스킹되지 않음
    */
   eventSource?: AWSEventSource | AzureEventSource | GCPEventSource;
+
+  cloudGroupName?: string[]; // 선택 가능한 cloudGroupName 목록을 서버에서 받아야하지만, 편의상 상수로 선언하여 사용
+  eventProcessEnabled: boolean;
+  userActivityEnabled: boolean;
 }
+
+export const initialCloudData: Cloud = {
+  id: '',
+  name: '',
+  provider: 'AWS',
+
+  credentialType: 'ACCESS_KEY',
+  credentials: {
+    accessKeyId: '',
+    secretAccessKey: '',
+  },
+  regionList: ['global'],
+  proxyUrl: undefined,
+
+  scheduleScanEnabled: false,
+  scheduleScanSetting: undefined,
+
+  eventSource: undefined,
+  cloudGroupName: [],
+  eventProcessEnabled: false,
+  userActivityEnabled: false,
+};

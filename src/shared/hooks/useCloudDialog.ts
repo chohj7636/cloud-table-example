@@ -10,11 +10,8 @@ import { devtools } from 'zustand/middleware';
 
 interface CloudDialogInfo {
   type: 'create' | 'edit';
+  editCloudId?: string;
   confirmButton: {
-    text: string;
-    clickEvent: () => void;
-  };
-  cancelButton: {
     text: string;
     clickEvent: () => void;
   };

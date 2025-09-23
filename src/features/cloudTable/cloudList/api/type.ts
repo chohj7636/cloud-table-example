@@ -1,6 +1,4 @@
-import { NextResponse } from 'next/server';
-
-import { Provider } from '../types';
+import { Provider } from '@/shared/types/types';
 
 export interface CloudTable {
   id: string; // GET 요청 시 획득
@@ -13,7 +11,7 @@ export interface CloudTable {
 }
 
 // GET Cloud Table
-export interface GetCloudTableResponse extends NextResponse {
+export interface GetCloudTableResponse {
   data: CloudTable[];
   timestamp: string;
 }

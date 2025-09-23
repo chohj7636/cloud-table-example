@@ -1,5 +1,8 @@
 import type { Metadata } from 'next';
 
+import DialogContainer from '@/widgets/DialogContainer';
+
+import { ReactQueryProvider } from './ReactQueryProvider';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -14,7 +17,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`antialiased`}>{children}</body>
+      <body className={`antialiased`}>
+        <ReactQueryProvider>
+          <div id="cloud-dialog"></div>
+          <div id="inner-container" className="min-h-screen bg-gray-50 p-8">
+            {children}
+          </div>
+          <DialogContainer />
+        </ReactQueryProvider>
+      </body>
     </html>
   );
 }
