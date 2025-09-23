@@ -56,7 +56,13 @@ const DialogCredentialsConfig: React.FC<DialogCredentialsConfigProps> =
             return [{ label: 'JSON Text', value: 'JSON_TEXT' }];
 
           default:
-            return [];
+            return [
+              {
+                label: 'Provider를 선택해주세요',
+                value: 'none',
+                disabled: true,
+              },
+            ];
         }
       };
 
@@ -66,20 +72,10 @@ const DialogCredentialsConfig: React.FC<DialogCredentialsConfigProps> =
         );
       };
 
-      const handleAccessKeyChange = (
-        e: React.ChangeEvent<HTMLInputElement>,
-      ) => {
-        updateCredentials({ accessKeyId: e.target.value });
-      };
-
-      const handleSecretKeyChange = (
-        e: React.ChangeEvent<HTMLInputElement>,
-      ) => {
-        updateCredentials({ secretAccessKey: e.target.value });
-      };
-
-      const handleRoleArnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        updateCredentials({ roleArn: e.target.value });
+      // 공통 onChange 핸들러
+      const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        updateCredentials({ [name]: value });
       };
 
       const printCredentialComponent = (providerType: Provider) => {
@@ -90,30 +86,89 @@ const DialogCredentialsConfig: React.FC<DialogCredentialsConfigProps> =
                 <div className="flex flex-col gap-2">
                   <Label>Access Key *</Label>
                   <Input
+                    name="accessKeyId"
                     value={(credentials as AWSCredential).accessKeyId}
-                    onChange={handleAccessKeyChange}
+                    onChange={handleInputChange}
                   />
                 </div>
                 <div className="flex flex-col gap-2">
                   <Label>Secret Key *</Label>
                   <Input
+                    name="secretAccessKey"
                     value={(credentials as AWSCredential).secretAccessKey || ''}
-                    onChange={handleSecretKeyChange}
+                    onChange={handleInputChange}
                   />
                 </div>
                 <div className="flex flex-col gap-2">
                   <Label>Role ARN</Label>
                   <Input
+                    name="roleArn"
                     value={(credentials as AWSCredential).roleArn || ''}
-                    onChange={handleRoleArnChange}
+                    onChange={handleInputChange}
                   />
                 </div>
               </div>
             );
           case 'AZURE':
-            return <div>AZURE</div>;
+            return (
+              <div className="space-y-6">
+                <div className="flex flex-col gap-2">
+                  <Label>Tenant ID *</Label>
+                  <Input
+                    name="tenantId"
+                    value={(credentials as AzureCredential).tenantId || ''}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Label>Subscription ID *</Label>
+                  <Input
+                    name="subscriptionId"
+                    value={
+                      (credentials as AzureCredential).subscriptionId || ''
+                    }
+                    onChange={handleInputChange}
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Label>Application ID *</Label>
+                  <Input
+                    name="applicationId"
+                    value={(credentials as AzureCredential).applicationId || ''}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Label>Secret Key *</Label>
+                  <Input
+                    name="secretKey"
+                    value={(credentials as AzureCredential).secretKey || ''}
+                    onChange={handleInputChange}
+                  />
+                </div>
+              </div>
+            );
           case 'GCP':
-            return <div>GCP</div>;
+            return (
+              <div className="space-y-6">
+                <div className="flex flex-col gap-2">
+                  <Label>Project ID *</Label>
+                  <Input
+                    name="projectId"
+                    value={(credentials as GCPCredential).projectId || ''}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Label>JSON Text *</Label>
+                  <Input
+                    name="jsonText"
+                    value={(credentials as GCPCredential).jsonText || ''}
+                    onChange={handleInputChange}
+                  />
+                </div>
+              </div>
+            );
 
           default:
             return null;
@@ -126,15 +181,13 @@ const DialogCredentialsConfig: React.FC<DialogCredentialsConfigProps> =
           <div className="space-y-6 pl-4">
             <div className="flex flex-col gap-2">
               <Label className="text-[16px]">Key Registration Method *</Label>
-              {provider && (
-                <DefaultSelect
-                  className="w-full"
-                  options={printCredentialType(provider)}
-                  placeholder="credentialType"
-                  value={credentialType}
-                  onValueChange={handleCredentialTypeChange}
-                />
-              )}
+              <DefaultSelect
+                className="w-full"
+                options={printCredentialType(provider)}
+                placeholder="credentialType"
+                value={credentialType}
+                onValueChange={handleCredentialTypeChange}
+              />
             </div>
             <div className="flex flex-col gap-4">
               <Label className="text-[16px]">Credentials *</Label>
