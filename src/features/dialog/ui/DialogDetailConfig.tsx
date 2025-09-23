@@ -2,6 +2,7 @@ import React from 'react';
 
 import { Input } from '@/shared/components/ui/input';
 import { Label } from '@/shared/components/ui/label';
+import { Switch } from '@/shared/components/ui/switch';
 import {
   AWSEventSource,
   AzureEventSource,
@@ -57,23 +58,19 @@ const DialogDetailConfig: React.FC<DialogDetailConfigProps> = React.memo(
       setCloudGroupName(newGroups);
     };
 
-    const handleEventProcessToggle = (
-      e: React.ChangeEvent<HTMLInputElement>,
-    ) => {
-      setEventProcessEnabled(e.target.checked);
+    const handleEventProcessToggle = () => {
+      setEventProcessEnabled(!eventProcessEnabled);
     };
 
-    const handleUserActivityToggle = (
-      e: React.ChangeEvent<HTMLInputElement>,
-    ) => {
-      setUserActivityEnabled(e.target.checked);
+    const handleUserActivityToggle = () => {
+      setUserActivityEnabled(!userActivityEnabled);
     };
 
     const printEventSourceComponent = (providerType: Provider) => {
       switch (providerType) {
         case 'AWS':
           return (
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 pl-4">
               <Label>CloudTrail Name</Label>
               <Input
                 value={(eventSource as AWSEventSource)?.cloudTrailName || ''}
@@ -84,7 +81,7 @@ const DialogDetailConfig: React.FC<DialogDetailConfigProps> = React.memo(
           );
         case 'AZURE':
           return (
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 pl-4">
               <Label>Storage Account Name</Label>
               <Input
                 value={
@@ -97,7 +94,7 @@ const DialogDetailConfig: React.FC<DialogDetailConfigProps> = React.memo(
           );
         case 'GCP':
           return (
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 pl-4">
               <Label>Storage Account Name</Label>
               <Input
                 value={
@@ -119,15 +116,15 @@ const DialogDetailConfig: React.FC<DialogDetailConfigProps> = React.memo(
         <div className="space-y-6 pl-4">
           {/* Event Integration */}
           {provider && (
-            <div className="flex flex-col gap-2">
-              <Label>Event Integration</Label>
+            <div className="flex flex-col gap-4">
+              <Label className="text-[16px]">Event Integration</Label>
               {printEventSourceComponent(provider)}
             </div>
           )}
 
           {/* Cloud Group Name */}
           <div className="flex flex-col gap-2">
-            <Label>Cloud Group</Label>
+            <Label className="text-[16px]">Cloud Group</Label>
             <div className="grid grid-cols-2 gap-2 rounded-md border p-3">
               {CloudGroupNameList.map((group) => (
                 <label
@@ -149,28 +146,29 @@ const DialogDetailConfig: React.FC<DialogDetailConfigProps> = React.memo(
           <div className="h-px w-full bg-gray-200" />
 
           {/* Toggle Settings */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <input
-                type="checkbox"
-                id="eventProcess"
-                checked={eventProcessEnabled}
-                onChange={handleEventProcessToggle}
-                className="h-4 w-4"
-              />
-              <Label htmlFor="eventProcess">Enable Event Process</Label>
+          <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+            <div className="space-y-0.5">
+              <Label className="text-[16px]">Enable Event Process</Label>
+              <p className="text-[14px] text-gray-500">
+                Whether to process real-time events from the cloud.
+              </p>
             </div>
-
-            <div className="flex items-center gap-3">
-              <input
-                type="checkbox"
-                id="userActivity"
-                checked={userActivityEnabled}
-                onChange={handleUserActivityToggle}
-                className="h-4 w-4"
-              />
-              <Label htmlFor="userActivity">Enable User Activity</Label>
+            <Switch
+              checked={eventProcessEnabled}
+              onCheckedChange={handleEventProcessToggle}
+            />
+          </div>
+          <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+            <div className="space-y-0.5">
+              <Label className="text-[16px]">Enable User Activity</Label>
+              <p className="text-[14px] text-gray-500">
+                Track the usage patterns of users in the cloud.
+              </p>
             </div>
+            <Switch
+              checked={userActivityEnabled}
+              onCheckedChange={handleUserActivityToggle}
+            />
           </div>
         </div>
       </div>
