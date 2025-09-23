@@ -20,6 +20,7 @@ const CloudTableContainer = () => {
       // 클라우드 수정 다이얼로그 띄우기
       cloudDialog({
         type: 'edit',
+        editCloudId: id,
         confirmButton: {
           text: '확인',
           clickEvent: () => {},
