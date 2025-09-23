@@ -109,3 +109,25 @@ export interface Cloud {
   eventProcessEnabled: boolean;
   userActivityEnabled: boolean;
 }
+
+export const initialCloudData: Cloud = {
+  id: '',
+  name: '',
+  provider: 'AWS',
+
+  credentialType: 'ACCESS_KEY',
+  credentials: {
+    accessKeyId: '',
+    secretAccessKey: '',
+  },
+  regionList: ['global'],
+  proxyUrl: undefined,
+
+  scheduleScanEnabled: false,
+  scheduleScanSetting: undefined,
+
+  eventSource: undefined,
+  cloudGroupName: [],
+  eventProcessEnabled: false,
+  userActivityEnabled: false,
+};
