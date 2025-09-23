@@ -1,5 +1,6 @@
 'use client';
 
+import { useCallback, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import DialogCredentialsConfig from '@/features/dialog/ui/DIalogCredentialsConfig';
@@ -9,6 +10,20 @@ import DialogRegionOrNetwork from '@/features/dialog/ui/DialogRegionOrNetwork';
 import DialogScheduleScanConfig from '@/features/dialog/ui/DialogScheduleScanConfig';
 import { Button } from '@/shared/components/ui/button';
 import { useCloudDialog } from '@/shared/hooks/useCloudDialog';
+import {
+  AWSCredential,
+  AWSCredentialType,
+  AWSEventSource,
+  AzureCredential,
+  AzureCredentialType,
+  AzureEventSource,
+  GCPCredential,
+  GCPCredentialType,
+  GCPEventSource,
+  Provider,
+  ScheduleScanSetting,
+  initialCloudData,
+} from '@/shared/types/types';
 import { X } from 'lucide-react';
 
 /**
@@ -21,6 +36,102 @@ import { X } from 'lucide-react';
 
 const CloudDialog = () => {
   const { dialogInfo, closeCloudDialog } = useCloudDialog();
+
+  // 각 필드별 개별 state
+  const [id, setId] = useState(initialCloudData.id);
+  const [name, setName] = useState(initialCloudData.name);
+  const [provider, setProvider] = useState<Provider>(initialCloudData.provider);
+  const [credentialType, setCredentialType] = useState<
+    AWSCredentialType | AzureCredentialType | GCPCredentialType
+  >(initialCloudData.credentialType);
+  const [credentials, setCredentials] = useState<
+    AWSCredential | AzureCredential | GCPCredential
+  >(initialCloudData.credentials);
+  const [regionList, setRegionList] = useState<string[]>(
+    initialCloudData.regionList,
+  );
+  const [proxyUrl, setProxyUrl] = useState<string | undefined>(
+    initialCloudData.proxyUrl,
+  );
+  const [scheduleScanEnabled, setScheduleScanEnabled] = useState(
+    initialCloudData.scheduleScanEnabled,
+  );
+  const [scheduleScanSetting, setScheduleScanSetting] = useState<
+    ScheduleScanSetting | undefined
+  >(initialCloudData.scheduleScanSetting);
+  const [eventSource, setEventSource] = useState<
+    AWSEventSource | AzureEventSource | GCPEventSource | undefined
+  >(initialCloudData.eventSource);
+  const [cloudGroupName, setCloudGroupName] = useState<string[] | undefined>(
+    initialCloudData.cloudGroupName,
+  );
+  const [eventProcessEnabled, setEventProcessEnabled] = useState(
+    initialCloudData.eventProcessEnabled,
+  );
+  const [userActivityEnabled, setUserActivityEnabled] = useState(
+    initialCloudData.userActivityEnabled,
+  );
+
+  // 다이얼로그가 열릴 때 초기 데이터 설정
+  useEffect(() => {
+    if (dialogInfo && dialogInfo.type === 'edit') {
+      // Edit 일때 state 업데이트 해주자
+    }
+  }, [dialogInfo]);
+
+  // 중첩 객체 업데이트를 위한 헬퍼 함수들
+  const updateCredentials = useCallback(
+    (
+      credentialUpdates: Partial<
+        AWSCredential | AzureCredential | GCPCredential
+      >,
+    ) => {
+      setCredentials((prev) => ({ ...prev, ...credentialUpdates }));
+    },
+    [],
+  );
+
+  const updateScheduleScanSetting = useCallback(
+    (settingUpdates: Partial<ScheduleScanSetting>) => {
+      setScheduleScanSetting(
+        (prev) =>
+          ({ ...(prev || {}), ...settingUpdates }) as ScheduleScanSetting,
+      );
+    },
+    [],
+  );
+
+  const updateEventSource = useCallback(
+    (
+      eventSourceUpdates: Partial<
+        AWSEventSource | AzureEventSource | GCPEventSource
+      >,
+    ) => {
+      setEventSource((prev) => ({ ...(prev || {}), ...eventSourceUpdates }));
+    },
+    [],
+  );
+
+  // test handler
+  const onClickTest = () => {
+    const currentFormData = {
+      id,
+      name,
+      provider,
+      credentialType,
+      credentials,
+      regionList,
+      proxyUrl,
+      scheduleScanEnabled,
+      scheduleScanSetting,
+      eventSource,
+      cloudGroupName,
+      eventProcessEnabled,
+      userActivityEnabled,
+    };
+    console.log('현재 폼 데이터:', currentFormData);
+    closeCloudDialog();
+  };
 
   /**
    * Create Cloud fields
@@ -78,26 +189,58 @@ const CloudDialog = () => {
               {/* body */}
               <div className="space-y-5 px-2">
                 {/* 기본 설정 */}
-                <DialogBasicConfig />
+                <DialogBasicConfig
+                  name={name}
+                  provider={provider}
+                  setName={setName}
+                  setProvider={setProvider}
+                />
 
                 {/* 인증 */}
-                <DialogCredentialsConfig />
+                <DialogCredentialsConfig
+                  provider={provider}
+                  credentialType={credentialType}
+                  credentials={credentials}
+                  setCredentialType={setCredentialType}
+                  updateCredentials={updateCredentials}
+                />
 
                 {/* 지역 및 네트워크 */}
-                <DialogRegionOrNetwork />
+                <DialogRegionOrNetwork
+                  provider={provider}
+                  regionList={regionList}
+                  proxyUrl={proxyUrl}
+                  setRegionList={setRegionList}
+                  setProxyUrl={setProxyUrl}
+                />
 
                 {/* 스캐닝 스케줄 설정 */}
-                <DialogScheduleScanConfig />
+                <DialogScheduleScanConfig
+                  scheduleScanEnabled={scheduleScanEnabled}
+                  scheduleScanSetting={scheduleScanSetting}
+                  setScheduleScanEnabled={setScheduleScanEnabled}
+                  updateScheduleScanSetting={updateScheduleScanSetting}
+                />
 
                 {/* 고급 설정 */}
-                <DialogDetailConfig />
+                <DialogDetailConfig
+                  provider={provider}
+                  eventSource={eventSource}
+                  cloudGroupName={cloudGroupName}
+                  eventProcessEnabled={eventProcessEnabled}
+                  userActivityEnabled={userActivityEnabled}
+                  updateEventSource={updateEventSource}
+                  setCloudGroupName={setCloudGroupName}
+                  setEventProcessEnabled={setEventProcessEnabled}
+                  setUserActivityEnabled={setUserActivityEnabled}
+                />
               </div>
             </div>
 
             {/* 버튼 그룹 */}
             <div className="mt-8 grid grid-cols-2 gap-2">
               <Button onClick={closeCloudDialog}>취소</Button>
-              <Button onClick={closeCloudDialog}>
+              <Button onClick={onClickTest}>
                 {dialogInfo.confirmButton.text}
               </Button>
             </div>
