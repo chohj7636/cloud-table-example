@@ -14,12 +14,6 @@ export const createCloudTableColumns = (
   handleEdit: (id: string) => void,
   handleDelete: (id: string) => void,
 ) => [
-  columnHelper.accessor('id', {
-    header: 'ID',
-    cell: (info) => (
-      <span className="font-mono text-sm text-gray-600">{info.getValue()}</span>
-    ),
-  }),
   columnHelper.accessor('provider', {
     header: 'Provider',
     cell: (info) => {
@@ -123,12 +117,12 @@ export const createCloudTableColumns = (
   }),
   columnHelper.display({
     id: 'actions',
-    header: '작업',
+    header: 'Actions',
     cell: (info) => (
       <div className="flex items-center gap-2">
         <button
           onClick={() => handleEdit(info.row.original.id)}
-          className="rounded p-1 text-blue-600 hover:bg-blue-50 hover:text-blue-700"
+          className="cursor-pointer rounded p-1 text-blue-600 hover:bg-blue-50 hover:text-blue-700"
           aria-label="수정"
           tabIndex={0}
         >
@@ -136,7 +130,7 @@ export const createCloudTableColumns = (
         </button>
         <button
           onClick={() => handleDelete(info.row.original.id)}
-          className="rounded p-1 text-red-600 hover:bg-red-50 hover:text-red-700"
+          className="cursor-pointer rounded p-1 text-red-600 hover:bg-red-50 hover:text-red-700"
           aria-label="삭제"
           tabIndex={0}
         >
