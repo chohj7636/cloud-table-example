@@ -5,6 +5,7 @@ import { useCallback, useMemo } from 'react';
 import { createCloudTableColumns } from '@/features/cloudTable/cloudList/config/columns';
 import { useCloudTable } from '@/features/cloudTable/cloudList/hooks/useCloudTable';
 import CloudTable from '@/features/cloudTable/cloudList/ui/CloudTable';
+import TableSkeleton from '@/shared/components/skeleton/TableSkeleton';
 import { Button } from '@/shared/components/ui/button';
 import { useCloudDialog } from '@/shared/hooks/useCloudDialog';
 
@@ -53,8 +54,11 @@ const CloudTableContainer = () => {
   return (
     <div className="w-full">
       <Button onClick={handleCreate}>생성</Button>
-      <CloudTable data={cloudTableData || []} columns={columns} />
-      {isCloudTableLoading && <div>Loading...</div>}
+      {isCloudTableLoading ? (
+        <TableSkeleton />
+      ) : (
+        <CloudTable data={cloudTableData || []} columns={columns} />
+      )}
     </div>
   );
 };
