@@ -3,12 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
-import { useEditCloudInfo } from '@/features/dialog/hooks/useEditCloudInfo';
-import DialogCredentialsConfig from '@/features/dialog/ui/DIalogCredentialsConfig';
-import DialogBasicConfig from '@/features/dialog/ui/DialogBasicConfig';
-import DialogDetailConfig from '@/features/dialog/ui/DialogDetailConfig';
-import DialogRegionOrNetwork from '@/features/dialog/ui/DialogRegionOrNetwork';
-import DialogScheduleScanConfig from '@/features/dialog/ui/DialogScheduleScanConfig';
+import { useEditCloudInfo } from '@/features/cloudTable/editCloud/hooks/useEditCloudInfo';
 import DialogSkeleton from '@/shared/components/skeleton/DIalogSkeleton';
 import { Button } from '@/shared/components/ui/button';
 import { useCloudDialog } from '@/shared/hooks/useCloudDialog';
@@ -26,6 +21,11 @@ import {
   ScheduleScanSetting,
   initialCloudData,
 } from '@/shared/types/types';
+import DialogCredentialsConfig from '@/widgets/CloudDialog/dialogConfig/DIalogCredentialsConfig';
+import DialogBasicConfig from '@/widgets/CloudDialog/dialogConfig/DialogBasicConfig';
+import DialogDetailConfig from '@/widgets/CloudDialog/dialogConfig/DialogDetailConfig';
+import DialogRegionOrNetwork from '@/widgets/CloudDialog/dialogConfig/DialogRegionOrNetwork';
+import DialogScheduleScanConfig from '@/widgets/CloudDialog/dialogConfig/DialogScheduleScanConfig';
 import { X } from 'lucide-react';
 
 /**

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-import DialogContainer from '@/widgets/DialogContainer';
+import DialogContainer from '@/widgets/CloudDialog/DialogContainer';
 
 import { ReactQueryProvider } from './ReactQueryProvider';
 import './globals.css';

@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getCloudInfoApi } from '../api/api';
 
 export const useEditCloudInfo = (id: string, enabled: boolean = false) => {
+  // 클라우드 정보 조회 query
   const {
     data: cloudInfoData,
     isLoading: isCloudInfoLoading,

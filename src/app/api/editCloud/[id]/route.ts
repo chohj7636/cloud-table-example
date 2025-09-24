@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-import { GetCloudInfoParams } from '@/features/dialog/api/type';
+import { GetCloudInfoParams } from '@/features/cloudTable/editCloud/api/type';
 import {
   AWSCredential,
   AWSEventSource,
