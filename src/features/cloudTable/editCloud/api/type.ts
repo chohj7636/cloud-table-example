@@ -9,3 +9,13 @@ export interface GetCloudInfoResponse {
   data: Cloud | null;
   timestamp: string;
 }
+
+// POST 클라우드 수정
+export interface EditCloudInfoParams {
+  data: Cloud;
+  timestamp: string;
+}
+
+export interface EditCloudInfoResponse {
+  message: string;
+}

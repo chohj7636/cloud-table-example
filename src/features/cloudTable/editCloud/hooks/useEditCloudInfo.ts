@@ -1,6 +1,8 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 import { getCloudInfoApi } from '../api/api';
+import { EditCloudInfoParams } from '../api/type';
 
 export const useEditCloudInfo = (id: string, enabled: boolean = false) => {
   // 클라우드 정보 조회 query
@@ -20,5 +22,28 @@ export const useEditCloudInfo = (id: string, enabled: boolean = false) => {
     gcTime: 10 * 60 * 1000,
   });
 
-  return { cloudInfoData, isCloudInfoLoading, cloudInfoError, fetchCloudInfo };
+  // 클라우드 수정 query (가데이터이기 떄문에 query로 호출하지 않고 console.log로 출력)
+  const { mutate: editCloudInfo } = useMutation({
+    mutationFn: (data: EditCloudInfoParams) => {
+      console.log('클라우드 수정 데이터 정보: ', data);
+      return Promise.resolve();
+    },
+    onSuccess: () => {
+      toast.success('클라우드 수정 성공', {
+        position: 'top-center',
+        duration: 2000,
+      });
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  return {
+    cloudInfoData,
+    isCloudInfoLoading,
+    cloudInfoError,
+    fetchCloudInfo,
+    editCloudInfo,
+  };
 };
