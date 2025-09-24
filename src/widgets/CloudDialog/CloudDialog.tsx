@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
+import { useCreateCloud } from '@/features/cloudTable/createCloud/hooks/useCreateCloud';
 import { useEditCloudInfo } from '@/features/cloudTable/editCloud/hooks/useEditCloudInfo';
 import DialogSkeleton from '@/shared/components/skeleton/DIalogSkeleton';
 import { Button } from '@/shared/components/ui/button';
@@ -14,6 +15,7 @@ import {
   AzureCredential,
   AzureCredentialType,
   AzureEventSource,
+  Cloud,
   GCPCredential,
   GCPCredentialType,
   GCPEventSource,
@@ -41,8 +43,11 @@ const CloudDialog = () => {
   // cloud dialog hook
   const { dialogInfo, closeCloudDialog } = useCloudDialog();
 
-  // edit 모드 일 때만 query 호출
-  const { cloudInfoData, isCloudInfoLoading, cloudInfoError } =
+  // create 모드 일 때 query 호출
+  const { createCloudInfo } = useCreateCloud();
+
+  // edit 모드 일 때 query 호출
+  const { cloudInfoData, isCloudInfoLoading, cloudInfoError, editCloudInfo } =
     useEditCloudInfo(
       dialogInfo?.editCloudId || '',
       dialogInfo?.type === 'edit' && !!dialogInfo?.editCloudId,
@@ -135,9 +140,9 @@ const CloudDialog = () => {
     [],
   );
 
-  // test handler
-  const onClickTest = () => {
-    const currentFormData = {
+  // confirm handler
+  const confirmHandler = () => {
+    const currentFormData: Cloud = {
       id,
       name,
       provider,
@@ -146,28 +151,30 @@ const CloudDialog = () => {
       regionList,
       proxyUrl,
       scheduleScanEnabled,
-      scheduleScanSetting: {
-        frequency: scheduleScanSetting?.frequency,
-        date:
-          scheduleScanSetting?.frequency === 'MONTH'
-            ? scheduleScanSetting?.date
-            : undefined,
-        weekday:
-          scheduleScanSetting?.frequency === 'WEEK'
-            ? scheduleScanSetting?.weekday
-            : undefined,
-        hour:
-          scheduleScanSetting?.frequency !== 'HOUR'
-            ? scheduleScanSetting?.hour
-            : undefined,
-        minute: scheduleScanSetting?.minute,
-      },
+      scheduleScanSetting:
+        scheduleScanEnabled && scheduleScanSetting
+          ? scheduleScanSetting
+          : undefined,
       eventSource,
       cloudGroupName,
       eventProcessEnabled,
       userActivityEnabled,
     };
-    console.log('현재 폼 데이터:', currentFormData);
+
+    if (dialogInfo?.type === 'edit') {
+      // 클라우드 수정 query 호출
+      editCloudInfo({
+        data: currentFormData,
+        timestamp: new Date().toISOString(),
+      });
+    } else {
+      // 클라우드 생성 query 호출
+      createCloudInfo({
+        data: currentFormData,
+        timestamp: new Date().toISOString(),
+      });
+    }
+
     closeCloudDialog();
   };
 
@@ -328,7 +335,7 @@ const CloudDialog = () => {
             {/* 버튼 그룹 */}
             <div className="grid grid-cols-2 gap-2 pt-4">
               <Button onClick={closeCloudDialog}>취소</Button>
-              <Button onClick={onClickTest}>
+              <Button onClick={confirmHandler}>
                 {dialogInfo.confirmButton.text}
               </Button>
             </div>
