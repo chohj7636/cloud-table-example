@@ -8,6 +8,7 @@ import { useEditCloudInfo } from '@/features/cloudTable/editCloud/hooks/useEditC
 import DialogSkeleton from '@/shared/components/skeleton/DIalogSkeleton';
 import { Button } from '@/shared/components/ui/button';
 import { useCloudDialog } from '@/shared/hooks/useCloudDialog';
+import { isValidInput } from '@/shared/lib/utils';
 import {
   AWSCredential,
   AWSCredentialType,
@@ -40,6 +41,9 @@ import { X } from 'lucide-react';
 
 const CloudDialog = () => {
   const backgroundRef = useRef<HTMLDivElement>(null);
+  // state
+  const [isValidate, setIsValidate] = useState(false);
+
   // cloud dialog hook
   const { dialogInfo, closeCloudDialog } = useCloudDialog();
 
@@ -224,39 +228,50 @@ const CloudDialog = () => {
     };
   }, [closeCloudDialog]);
 
-  /**
-   * Create Cloud fields
-   *
-   * 기본 설정
-   * Cloud Name *
-   * Provider *
-   * Key Registration Method
-   *
-   * 인증
-   * Credentials
-   *   Access Key
-   *   Secret Key
-   *
-   * 지역 및 네트워크
-   * Region
-   * Proxy URL
-   *
-   * 스캐닝 스케줄 설정
-   * Scan Schedule Setting
-   *    Set Scan Frequency
-   *        Daily()
-   *        date
-   *        Day of week
-   *        hour
-   *        minute
-   *
-   * 고급 설정
-   * cloudGroupName 클라우드 그룹 이름
-   * Event Integration 이벤트 소스
-   * eventProcessEnabled 이벤트 처리 활성화
-   * userActivityEnabled 사용자 활동 추적
-   *
-   */
+  // 폼 유효성 검증
+  useEffect(() => {
+    const validateForm = () => {
+      // 기본 필드 검증
+      const isNameValid = isValidInput(name);
+      const isProviderValid = isValidInput(provider);
+
+      // Provider별 Credentials 검증
+      let areCredentialsValid = false;
+
+      switch (provider) {
+        case 'AWS':
+          const awsCredentials = credentials as AWSCredential;
+          areCredentialsValid =
+            isValidInput(awsCredentials.accessKeyId) &&
+            isValidInput(awsCredentials.secretAccessKey);
+          break;
+
+        case 'AZURE':
+          const azureCredentials = credentials as AzureCredential;
+          areCredentialsValid =
+            isValidInput(azureCredentials.tenantId) &&
+            isValidInput(azureCredentials.subscriptionId) &&
+            isValidInput(azureCredentials.applicationId) &&
+            isValidInput(azureCredentials.secretKey);
+          break;
+
+        case 'GCP':
+          const gcpCredentials = credentials as GCPCredential;
+          areCredentialsValid = isValidInput(gcpCredentials.jsonText);
+          break;
+
+        default:
+          areCredentialsValid = false;
+      }
+
+      // 모든 필수 필드가 유효한지 확인
+      const isFormValid = isNameValid && isProviderValid && areCredentialsValid;
+
+      setIsValidate(isFormValid);
+    };
+
+    validateForm();
+  }, [name, provider, credentials]);
 
   return dialogInfo
     ? createPortal(
