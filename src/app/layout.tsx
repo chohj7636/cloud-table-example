@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 
+import { Toaster } from '@/shared/components/ui/sonner';
 import DialogContainer from '@/widgets/CloudDialog/DialogContainer';
 
 import { ReactQueryProvider } from './ReactQueryProvider';
@@ -24,6 +25,7 @@ export default function RootLayout({
             {children}
           </div>
           <DialogContainer />
+          <Toaster />
         </ReactQueryProvider>
       </body>
     </html>
