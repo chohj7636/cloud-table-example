@@ -48,14 +48,19 @@ const CloudDialog = () => {
   const { dialogInfo, closeCloudDialog } = useCloudDialog();
 
   // create 모드 일 때 query 호출
-  const { createCloudInfo } = useCreateCloud();
+  const { createCloudInfo, isCreateCloudInfoPending } = useCreateCloud();
 
   // edit 모드 일 때 query 호출
-  const { cloudInfoData, isCloudInfoLoading, cloudInfoError, editCloudInfo } =
-    useEditCloudInfo(
-      dialogInfo?.editCloudId || '',
-      dialogInfo?.type === 'edit' && !!dialogInfo?.editCloudId,
-    );
+  const {
+    cloudInfoData,
+    isCloudInfoLoading,
+    cloudInfoError,
+    editCloudInfo,
+    isEditCloudInfoPending,
+  } = useEditCloudInfo(
+    dialogInfo?.editCloudId || '',
+    dialogInfo?.type === 'edit' && !!dialogInfo?.editCloudId,
+  );
 
   // 각 필드별 개별 state
   const [id, setId] = useState(initialCloudData.id);
@@ -178,8 +183,6 @@ const CloudDialog = () => {
         timestamp: new Date().toISOString(),
       });
     }
-
-    closeCloudDialog();
   };
 
   // 다이얼로그가 열릴 때 배경 스크롤을 방지하는 효과
@@ -356,9 +359,18 @@ const CloudDialog = () => {
                 <Button
                   className="w-full"
                   onClick={confirmHandler}
-                  disabled={!isValidate}
+                  disabled={
+                    !isValidate ||
+                    isCreateCloudInfoPending ||
+                    isCloudInfoLoading ||
+                    isEditCloudInfoPending
+                  }
                 >
-                  {dialogInfo.confirmButton.text}
+                  {isCreateCloudInfoPending ||
+                  isCloudInfoLoading ||
+                  isEditCloudInfoPending
+                    ? '로딩중'
+                    : dialogInfo.confirmButton.text}
                 </Button>
                 {isValidate ? null : (
                   <p className="absolute -bottom-6 left-0 text-sm font-bold text-red-500">
