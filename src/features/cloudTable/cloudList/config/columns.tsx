@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 import { Edit, Trash2 } from 'lucide-react';
 
 import { columnHelper } from '../ui/CloudTable';
@@ -18,26 +20,43 @@ export const createCloudTableColumns = (
     header: 'Provider',
     cell: (info) => {
       const provider = info.getValue();
-      const getProviderStyle = (provider: string) => {
-        switch (provider) {
-          case 'AWS':
-            return 'bg-orange-50 text-orange-700 ring-orange-600/20';
-          case 'AZURE':
-            return 'bg-blue-50 text-blue-700 ring-blue-600/20';
-          case 'GCP':
-            return 'bg-red-50 text-red-700 ring-red-600/20';
-          default:
-            return 'bg-gray-50 text-gray-700 ring-gray-600/20';
-        }
-      };
-
-      return (
-        <span
-          className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ${getProviderStyle(provider)}`}
-        >
-          {provider}
-        </span>
-      );
+      switch (provider) {
+        case 'AWS':
+          return (
+            <div className="flex items-center justify-center">
+              <Image
+                src={'/icon-aws.png'}
+                alt="icon-aws"
+                width={40}
+                height={40}
+              />
+            </div>
+          );
+        case 'AZURE':
+          return (
+            <div className="flex items-center justify-center">
+              <Image
+                src={'/icon-azure.png'}
+                alt="icon-azure"
+                width={40}
+                height={40}
+              />
+            </div>
+          );
+        case 'GCP':
+          return (
+            <div className="flex items-center justify-center">
+              <Image
+                src={'/icon-gcp.png'}
+                alt="icon-gcp"
+                width={40}
+                height={40}
+              />
+            </div>
+          );
+        default:
+          return null;
+      }
     },
   }),
   columnHelper.accessor('name', {
@@ -70,8 +89,8 @@ export const createCloudTableColumns = (
       <span
         className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${
           info.getValue()
-            ? 'bg-green-50 text-green-700 ring-1 ring-green-600/20 ring-inset'
-            : 'bg-red-50 text-red-700 ring-1 ring-red-600/20 ring-inset'
+            ? 'bg-blue-50 text-blue-700 ring-1 ring-blue-600/20 ring-inset'
+            : 'bg-gray-50 text-gray-700 ring-1 ring-gray-600/20 ring-inset'
         }`}
       >
         {info.getValue() ? 'ENABLED' : 'DISABLED'}
