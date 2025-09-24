@@ -334,7 +334,9 @@ const CloudDialog = () => {
 
             {/* 버튼 그룹 */}
             <div className="grid grid-cols-2 gap-2 pt-4">
-              <Button onClick={closeCloudDialog}>취소</Button>
+              <Button variant="outline" className="" onClick={closeCloudDialog}>
+                취소
+              </Button>
               <Button onClick={confirmHandler}>
                 {dialogInfo.confirmButton.text}
               </Button>

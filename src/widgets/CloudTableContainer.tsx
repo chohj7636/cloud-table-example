@@ -53,7 +53,9 @@ const CloudTableContainer = () => {
 
   return (
     <div className="w-full">
-      <Button onClick={handleCreate}>생성</Button>
+      <div className="mb-4 flex justify-end">
+        <Button onClick={handleCreate}>클라우드 생성</Button>
+      </div>
       {isCloudTableLoading ? (
         <TableSkeleton />
       ) : (
