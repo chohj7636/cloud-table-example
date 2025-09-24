@@ -60,7 +60,9 @@ const DialogRegionOrNetwork: React.FC<DialogRegionOrNetworkProps> = React.memo(
         <div className="space-y-6 pl-4">
           {/* Region List */}
           <div className="flex flex-col gap-2">
-            <Label className="text-[16px]">Regions *</Label>
+            <Label className="text-[16px]">
+              Regions <span className="text-red-500">*</span>
+            </Label>
             <div className="grid grid-cols-3 gap-2 rounded-md border p-3">
               {getRegionsByProvider(provider).map((region) => (
                 <label

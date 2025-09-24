@@ -222,7 +222,7 @@ const CloudDialog = () => {
     return () => {
       window.removeEventListener('keydown', handleEscapeKey);
     };
-  }, []);
+  }, [closeCloudDialog]);
 
   /**
    * Create Cloud fields
