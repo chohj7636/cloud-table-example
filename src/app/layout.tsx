@@ -9,6 +9,9 @@ import './globals.css';
 export const metadata: Metadata = {
   title: 'Tatum Cloud Table',
   description: 'Tatum Cloud Table',
+  icons: {
+    icon: '/tatumFavicon.png',
+  },
 };
 
 export default function RootLayout({
