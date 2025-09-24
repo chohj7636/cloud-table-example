@@ -348,13 +348,24 @@ const CloudDialog = () => {
             )}
 
             {/* 버튼 그룹 */}
-            <div className="grid grid-cols-2 gap-2 pt-4">
+            <div className="grid grid-cols-2 gap-2 py-4">
               <Button variant="outline" className="" onClick={closeCloudDialog}>
                 취소
               </Button>
-              <Button onClick={confirmHandler}>
-                {dialogInfo.confirmButton.text}
-              </Button>
+              <div className="relative">
+                <Button
+                  className="w-full"
+                  onClick={confirmHandler}
+                  disabled={!isValidate}
+                >
+                  {dialogInfo.confirmButton.text}
+                </Button>
+                {isValidate ? null : (
+                  <p className="absolute -bottom-6 left-0 text-sm font-bold text-red-500">
+                    필수 항목을 모두 입력해주세요.
+                  </p>
+                )}
+              </div>
             </div>
           </div>
         </div>,
