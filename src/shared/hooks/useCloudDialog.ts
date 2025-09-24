@@ -13,7 +13,6 @@ interface CloudDialogInfo {
   editCloudId?: string;
   confirmButton: {
     text: string;
-    clickEvent: () => void;
   };
 }
 
