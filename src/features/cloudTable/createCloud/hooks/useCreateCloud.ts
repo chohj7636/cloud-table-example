@@ -27,6 +27,11 @@ export const useCreateCloud = () => {
         });
       },
       onError: (error) => {
+        toast.error('클라우드 생성 실패', {
+          description: '잠시후 다시 시도해주세요.',
+          position: 'top-center',
+          duration: 2000,
+        });
         console.log(error);
       },
     });

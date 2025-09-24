@@ -45,6 +45,11 @@ export const useEditCloudInfo = (id: string, enabled: boolean = false) => {
         });
       },
       onError: (error) => {
+        toast.error('클라우드 수정 실패', {
+          description: '잠시후 다시 시도해주세요.',
+          position: 'top-center',
+          duration: 2000,
+        });
         console.log(error);
       },
     });
