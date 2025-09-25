@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import Image from 'next/image';
 
-import { Button } from '@/shared/components/ui/button';
 import {
   Collapsible,
   CollapsibleContent,
@@ -18,7 +17,6 @@ import {
   GCPEventSource,
   Provider,
 } from '@/shared/types/types';
-import { ChevronDownIcon } from 'lucide-react';
 
 interface DialogDetailConfigProps {
   provider: Provider;

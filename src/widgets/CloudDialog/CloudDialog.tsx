@@ -54,7 +54,6 @@ const CloudDialog = () => {
   const {
     cloudInfoData,
     isCloudInfoLoading,
-    cloudInfoError,
     editCloudInfo,
     isEditCloudInfoPending,
   } = useEditCloudInfo(
