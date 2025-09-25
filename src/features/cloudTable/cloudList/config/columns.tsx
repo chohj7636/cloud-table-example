@@ -25,7 +25,7 @@ export const createCloudTableColumns = (
           return (
             <div className="flex items-center justify-center">
               <Image
-                src={'/icon-aws.png'}
+                src={'/icons/icon-aws.png'}
                 alt="icon-aws"
                 width={40}
                 height={40}
@@ -36,7 +36,7 @@ export const createCloudTableColumns = (
           return (
             <div className="flex items-center justify-center">
               <Image
-                src={'/icon-azure.png'}
+                src={'/icons/icon-azure.png'}
                 alt="icon-azure"
                 width={40}
                 height={40}
@@ -47,7 +47,7 @@ export const createCloudTableColumns = (
           return (
             <div className="flex items-center justify-center">
               <Image
-                src={'/icon-gcp.png'}
+                src={'/icons/icon-gcp.png'}
                 alt="icon-gcp"
                 width={40}
                 height={40}

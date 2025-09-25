@@ -1,5 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 
+import Image from 'next/image';
+
+import { Button } from '@/shared/components/ui/button';
 import {
   Collapsible,
   CollapsibleContent,
@@ -144,11 +147,14 @@ const DialogDetailConfig: React.FC<DialogDetailConfigProps> = React.memo(
           <div className="flex w-full items-center gap-2 border-b">
             <h3 className="py-2 pl-2 text-lg font-bold">고급 설정</h3>
             <CollapsibleTrigger asChild>
-              <ChevronDownIcon
-                className={`size-5 transition-transform duration-300 ${
+              <Image
+                className={`size-4 cursor-pointer transition-transform duration-300 ${
                   isOpenCollapsible ? 'rotate-180' : ''
                 }`}
-                onClick={() => setIsOpenCollapsible(!isOpenCollapsible)}
+                src={'/icons/icon-collapsible.svg'}
+                alt="icon-collapsible"
+                width={16}
+                height={16}
               />
             </CollapsibleTrigger>
           </div>
