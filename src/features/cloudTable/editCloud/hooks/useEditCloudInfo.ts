@@ -30,7 +30,7 @@ export const useEditCloudInfo = (id: string, enabled: boolean = false) => {
   const { mutate: editCloudInfo, isPending: isEditCloudInfoPending } =
     useMutation({
       mutationFn: (data: EditCloudInfoParams) => {
-        console.log('클라우드 수정 데이터 정보: ', data);
+        console.log('클라우드 수정 데이터 정보: ', data.data);
         return new Promise((resolve) => {
           setTimeout(() => {
             resolve(true);

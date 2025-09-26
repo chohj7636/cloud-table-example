@@ -12,7 +12,7 @@ export const useCreateCloud = () => {
   const { mutate: createCloudInfo, isPending: isCreateCloudInfoPending } =
     useMutation({
       mutationFn: (data: PostCreateCloudInfoParams) => {
-        console.log('클라우드 생성 데이터 정보: ', data);
+        console.log('클라우드 생성 데이터 정보: ', data.data);
         return new Promise((resolve) => {
           setTimeout(() => {
             resolve(true);
