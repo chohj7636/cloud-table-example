@@ -127,7 +127,7 @@ export const initialCloudData: Cloud = {
   scheduleScanSetting: undefined,
 
   eventSource: undefined,
-  cloudGroupName: [],
+  cloudGroupName: undefined,
   eventProcessEnabled: false,
   userActivityEnabled: false,
 };
