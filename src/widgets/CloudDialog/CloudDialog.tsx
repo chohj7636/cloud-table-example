@@ -1,16 +1,14 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
-import { useEditCloudInfo } from '@/features/dialog/hooks/useEditCloudInfo';
-import DialogCredentialsConfig from '@/features/dialog/ui/DIalogCredentialsConfig';
-import DialogBasicConfig from '@/features/dialog/ui/DialogBasicConfig';
-import DialogDetailConfig from '@/features/dialog/ui/DialogDetailConfig';
-import DialogRegionOrNetwork from '@/features/dialog/ui/DialogRegionOrNetwork';
-import DialogScheduleScanConfig from '@/features/dialog/ui/DialogScheduleScanConfig';
+import { useCreateCloud } from '@/features/cloudTable/createCloud/hooks/useCreateCloud';
+import { useEditCloudInfo } from '@/features/cloudTable/editCloud/hooks/useEditCloudInfo';
+import DialogSkeleton from '@/shared/components/skeleton/DIalogSkeleton';
 import { Button } from '@/shared/components/ui/button';
 import { useCloudDialog } from '@/shared/hooks/useCloudDialog';
+import { isValidInput } from '@/shared/lib/utils';
 import {
   AWSCredential,
   AWSCredentialType,
@@ -18,6 +16,7 @@ import {
   AzureCredential,
   AzureCredentialType,
   AzureEventSource,
+  Cloud,
   GCPCredential,
   GCPCredentialType,
   GCPEventSource,
@@ -25,6 +24,11 @@ import {
   ScheduleScanSetting,
   initialCloudData,
 } from '@/shared/types/types';
+import DialogCredentialsConfig from '@/widgets/CloudDialog/dialogConfig/DIalogCredentialsConfig';
+import DialogBasicConfig from '@/widgets/CloudDialog/dialogConfig/DialogBasicConfig';
+import DialogDetailConfig from '@/widgets/CloudDialog/dialogConfig/DialogDetailConfig';
+import DialogRegionOrNetwork from '@/widgets/CloudDialog/dialogConfig/DialogRegionOrNetwork';
+import DialogScheduleScanConfig from '@/widgets/CloudDialog/dialogConfig/DialogScheduleScanConfig';
 import { X } from 'lucide-react';
 
 /**
@@ -36,14 +40,26 @@ import { X } from 'lucide-react';
  */
 
 const CloudDialog = () => {
+  const backgroundRef = useRef<HTMLDivElement>(null);
+  // state
+  const [isValidate, setIsValidate] = useState(false);
+
+  // cloud dialog hook
   const { dialogInfo, closeCloudDialog } = useCloudDialog();
 
-  // edit 모드 일 때만 query 호출
-  const { cloudInfoData, isCloudInfoLoading, cloudInfoError } =
-    useEditCloudInfo(
-      dialogInfo?.editCloudId || '',
-      dialogInfo?.type === 'edit' && !!dialogInfo?.editCloudId,
-    );
+  // create 모드 일 때 query 호출
+  const { createCloudInfo, isCreateCloudInfoPending } = useCreateCloud();
+
+  // edit 모드 일 때 query 호출
+  const {
+    cloudInfoData,
+    isCloudInfoLoading,
+    editCloudInfo,
+    isEditCloudInfoPending,
+  } = useEditCloudInfo(
+    dialogInfo?.editCloudId || '',
+    dialogInfo?.type === 'edit' && !!dialogInfo?.editCloudId,
+  );
 
   // 각 필드별 개별 state
   const [id, setId] = useState(initialCloudData.id);
@@ -132,9 +148,9 @@ const CloudDialog = () => {
     [],
   );
 
-  // test handler
-  const onClickTest = () => {
-    const currentFormData = {
+  // confirm handler
+  const confirmHandler = () => {
+    const currentFormData: Cloud = {
       id,
       name,
       provider,
@@ -143,86 +159,147 @@ const CloudDialog = () => {
       regionList,
       proxyUrl,
       scheduleScanEnabled,
-      scheduleScanSetting: {
-        frequency: scheduleScanSetting?.frequency,
-        date:
-          scheduleScanSetting?.frequency === 'MONTH'
-            ? scheduleScanSetting?.date
-            : undefined,
-        weekday:
-          scheduleScanSetting?.frequency === 'WEEK'
-            ? scheduleScanSetting?.weekday
-            : undefined,
-        hour:
-          scheduleScanSetting?.frequency !== 'HOUR'
-            ? scheduleScanSetting?.hour
-            : undefined,
-        minute: scheduleScanSetting?.minute,
-      },
+      scheduleScanSetting:
+        scheduleScanEnabled && scheduleScanSetting
+          ? scheduleScanSetting
+          : undefined,
       eventSource,
       cloudGroupName,
       eventProcessEnabled,
       userActivityEnabled,
     };
-    console.log('현재 폼 데이터:', currentFormData);
-    closeCloudDialog();
+
+    if (dialogInfo?.type === 'edit') {
+      // 클라우드 수정 query 호출
+      editCloudInfo({
+        data: currentFormData,
+        timestamp: new Date().toISOString(),
+      });
+    } else {
+      // 클라우드 생성 query 호출
+      createCloudInfo({
+        data: currentFormData,
+        timestamp: new Date().toISOString(),
+      });
+    }
   };
 
-  /**
-   * Create Cloud fields
-   *
-   * 기본 설정
-   * Cloud Name *
-   * Provider *
-   * Key Registration Method
-   *
-   * 인증
-   * Credentials
-   *   Access Key
-   *   Secret Key
-   *
-   * 지역 및 네트워크
-   * Region
-   * Proxy URL
-   *
-   * 스캐닝 스케줄 설정
-   * Scan Schedule Setting
-   *    Set Scan Frequency
-   *        Daily()
-   *        date
-   *        Day of week
-   *        hour
-   *        minute
-   *
-   * 고급 설정
-   * cloudGroupName 클라우드 그룹 이름
-   * Event Integration 이벤트 소스
-   * eventProcessEnabled 이벤트 처리 활성화
-   * userActivityEnabled 사용자 활동 추적
-   *
-   */
+  // 다이얼로그가 열릴 때 배경 스크롤을 방지하는 효과
+  useEffect(() => {
+    // 현재 스크롤 위치 저장
+    const scrollY = window.scrollY;
+
+    // 다이얼로그가 열릴 때 body를 고정하고 현재 스크롤 위치를 저장
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.overflow = 'hidden';
+    document.body.style.width = '100%';
+
+    return () => {
+      // 다이얼로그가 닫힐 때 원래 스크롤 위치로 복원
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.overflow = '';
+      document.body.style.width = '';
+      window.scrollTo(0, scrollY);
+    };
+  }, []);
+
+  // background 클릭 시 닫기
+  const handleBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (backgroundRef.current && backgroundRef.current === e.target) {
+      closeCloudDialog();
+    }
+  };
+
+  // esc 키로 닫기
+  useEffect(() => {
+    const handleEscapeKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        closeCloudDialog();
+      }
+    };
+
+    window.addEventListener('keydown', handleEscapeKey);
+    return () => {
+      window.removeEventListener('keydown', handleEscapeKey);
+    };
+  }, [closeCloudDialog]);
+
+  // 폼 유효성 검증
+  useEffect(() => {
+    const validateForm = () => {
+      // 기본 필드 검증
+      const isNameValid = isValidInput(name);
+      const isProviderValid = isValidInput(provider);
+
+      // Provider별 Credentials 검증
+      let areCredentialsValid = false;
+
+      switch (provider) {
+        case 'AWS':
+          const awsCredentials = credentials as AWSCredential;
+          areCredentialsValid =
+            isValidInput(awsCredentials.accessKeyId) &&
+            isValidInput(awsCredentials.secretAccessKey);
+          break;
+
+        case 'AZURE':
+          const azureCredentials = credentials as AzureCredential;
+          areCredentialsValid =
+            isValidInput(azureCredentials.tenantId) &&
+            isValidInput(azureCredentials.subscriptionId) &&
+            isValidInput(azureCredentials.applicationId) &&
+            isValidInput(azureCredentials.secretKey);
+          break;
+
+        case 'GCP':
+          const gcpCredentials = credentials as GCPCredential;
+          areCredentialsValid = isValidInput(gcpCredentials.jsonText);
+          break;
+
+        default:
+          areCredentialsValid = false;
+      }
+
+      // 모든 필수 필드가 유효한지 확인
+      const isFormValid = isNameValid && isProviderValid && areCredentialsValid;
+
+      setIsValidate(isFormValid);
+    };
+
+    validateForm();
+  }, [name, provider, credentials]);
 
   return dialogInfo
     ? createPortal(
-        <div className="fixed top-0 left-0 h-screen w-full bg-[rgba(0,0,0,0.6)]">
+        <div
+          ref={backgroundRef}
+          className="fixed top-0 left-0 h-screen w-full bg-[rgba(0,0,0,0.6)]"
+          onClick={handleBackgroundClick}
+        >
           <div
             id="dialog-layout"
             className="fixed top-1/2 left-1/2 flex h-5/6 w-3xl translate-x-[-50%] translate-y-[-50%] flex-col justify-between rounded-lg bg-white p-5"
           >
+            {/* header */}
+            <div className="my-4 flex w-full items-center justify-between">
+              <h2 className="text-2xl font-bold">
+                {dialogInfo.type === 'create' ? 'Create Cloud' : 'Edit Cloud'}
+              </h2>
+              <Button variant="ghost" onClick={closeCloudDialog}>
+                <X size={20} />
+              </Button>
+            </div>
             {/* inner */}
-            <div className="w-full flex-1 overflow-y-auto">
-              {/* header */}
-              <div className="my-4 flex w-full items-center justify-between">
-                <h2 className="text-2xl font-bold">
-                  {dialogInfo.type === 'create' ? 'Create Cloud' : 'Edit Cloud'}
-                </h2>
-                <Button variant="ghost" onClick={closeCloudDialog}>
-                  <X size={20} />
-                </Button>
-              </div>
-
-              {/* body */}
-              <div className="space-y-5 px-2">
+            {isCloudInfoLoading ? (
+              <DialogSkeleton />
+            ) : (
+              <div className="w-full flex-1 space-y-5 overflow-y-auto px-2">
                 {/* 기본 설정 */}
                 <DialogBasicConfig
                   name={name}
@@ -270,14 +347,36 @@ const CloudDialog = () => {
                   setUserActivityEnabled={setUserActivityEnabled}
                 />
               </div>
-            </div>
+            )}
 
             {/* 버튼 그룹 */}
-            <div className="mt-8 grid grid-cols-2 gap-2">
-              <Button onClick={closeCloudDialog}>취소</Button>
-              <Button onClick={onClickTest}>
-                {dialogInfo.confirmButton.text}
+            <div className="grid grid-cols-2 gap-2 py-4">
+              <Button variant="outline" className="" onClick={closeCloudDialog}>
+                취소
               </Button>
+              <div className="relative">
+                <Button
+                  className="w-full"
+                  onClick={confirmHandler}
+                  disabled={
+                    !isValidate ||
+                    isCreateCloudInfoPending ||
+                    isCloudInfoLoading ||
+                    isEditCloudInfoPending
+                  }
+                >
+                  {isCreateCloudInfoPending ||
+                  isCloudInfoLoading ||
+                  isEditCloudInfoPending
+                    ? '로딩중'
+                    : dialogInfo.confirmButton.text}
+                </Button>
+                {isValidate ? null : (
+                  <p className="absolute -bottom-6 left-0 text-sm font-bold text-red-500">
+                    필수 항목을 모두 입력해주세요.
+                  </p>
+                )}
+              </div>
             </div>
           </div>
         </div>,

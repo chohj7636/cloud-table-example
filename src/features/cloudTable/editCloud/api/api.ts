@@ -23,3 +23,6 @@ export const getCloudInfoApi = async (
     };
   }
 };
+
+// POST 클라우드 수정
+export const postEditCloudInfoApi = async () => {};

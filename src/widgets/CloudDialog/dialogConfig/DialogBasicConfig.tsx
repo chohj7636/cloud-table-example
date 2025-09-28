@@ -27,11 +27,15 @@ const DialogBasicConfig: React.FC<DialogBasicConfigProps> = React.memo(
         <h3 className="border-b py-2 pl-2 text-lg font-bold">기본 설정</h3>
         <div className="space-y-6 pl-4">
           <div className="flex flex-col gap-2">
-            <Label className="text-[16px]">Cloud Name *</Label>
+            <Label className="text-[16px]">
+              Cloud Name <span className="text-red-500">*</span>
+            </Label>
             <Input value={name} onChange={handleNameChange} />
           </div>
           <div className="flex flex-col gap-2">
-            <Label className="text-[16px]">Provider *</Label>
+            <Label className="text-[16px]">
+              Provider <span className="text-red-500">*</span>
+            </Label>
             <DefaultSelect
               className="w-full"
               options={[

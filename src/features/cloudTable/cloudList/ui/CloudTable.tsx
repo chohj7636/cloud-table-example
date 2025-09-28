@@ -54,11 +54,7 @@ const CloudTable = ({ data, columns }: CloudTableProps) => {
           </thead>
           <tbody className="divide-y divide-gray-200 bg-white">
             {table.getRowModel().rows.map((row) => (
-              <tr
-                key={row.id}
-                className="cursor-pointer hover:bg-gray-50"
-                onClick={() => handleRowClick(row.original.id)}
-              >
+              <tr key={row.id} onClick={() => handleRowClick(row.original.id)}>
                 {row.getVisibleCells().map((cell) => (
                   <td
                     key={cell.id}

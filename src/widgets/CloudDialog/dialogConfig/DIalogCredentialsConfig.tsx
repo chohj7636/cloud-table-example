@@ -84,7 +84,9 @@ const DialogCredentialsConfig: React.FC<DialogCredentialsConfigProps> =
             return (
               <div className="space-y-6">
                 <div className="flex flex-col gap-2">
-                  <Label>Access Key *</Label>
+                  <Label>
+                    Access Key <span className="text-red-500">*</span>
+                  </Label>
                   <Input
                     name="accessKeyId"
                     value={(credentials as AWSCredential).accessKeyId}
@@ -92,7 +94,9 @@ const DialogCredentialsConfig: React.FC<DialogCredentialsConfigProps> =
                   />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <Label>Secret Key *</Label>
+                  <Label>
+                    Secret Key <span className="text-red-500">*</span>
+                  </Label>
                   <Input
                     name="secretAccessKey"
                     value={(credentials as AWSCredential).secretAccessKey || ''}
@@ -113,7 +117,9 @@ const DialogCredentialsConfig: React.FC<DialogCredentialsConfigProps> =
             return (
               <div className="space-y-6">
                 <div className="flex flex-col gap-2">
-                  <Label>Tenant ID *</Label>
+                  <Label>
+                    Tenant ID <span className="text-red-500">*</span>
+                  </Label>
                   <Input
                     name="tenantId"
                     value={(credentials as AzureCredential).tenantId || ''}
@@ -121,7 +127,9 @@ const DialogCredentialsConfig: React.FC<DialogCredentialsConfigProps> =
                   />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <Label>Subscription ID *</Label>
+                  <Label>
+                    Subscription ID <span className="text-red-500">*</span>
+                  </Label>
                   <Input
                     name="subscriptionId"
                     value={
@@ -131,7 +139,9 @@ const DialogCredentialsConfig: React.FC<DialogCredentialsConfigProps> =
                   />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <Label>Application ID *</Label>
+                  <Label>
+                    Application ID <span className="text-red-500">*</span>
+                  </Label>
                   <Input
                     name="applicationId"
                     value={(credentials as AzureCredential).applicationId || ''}
@@ -139,7 +149,9 @@ const DialogCredentialsConfig: React.FC<DialogCredentialsConfigProps> =
                   />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <Label>Secret Key *</Label>
+                  <Label>
+                    Secret Key <span className="text-red-500">*</span>
+                  </Label>
                   <Input
                     name="secretKey"
                     value={(credentials as AzureCredential).secretKey || ''}
@@ -152,7 +164,9 @@ const DialogCredentialsConfig: React.FC<DialogCredentialsConfigProps> =
             return (
               <div className="space-y-6">
                 <div className="flex flex-col gap-2">
-                  <Label>Project ID *</Label>
+                  <Label>
+                    Project ID <span className="text-red-500">*</span>
+                  </Label>
                   <Input
                     name="projectId"
                     value={(credentials as GCPCredential).projectId || ''}
@@ -160,7 +174,9 @@ const DialogCredentialsConfig: React.FC<DialogCredentialsConfigProps> =
                   />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <Label>JSON Text *</Label>
+                  <Label>
+                    JSON Text <span className="text-red-500">*</span>
+                  </Label>
                   <Input
                     name="jsonText"
                     value={(credentials as GCPCredential).jsonText || ''}
@@ -180,7 +196,9 @@ const DialogCredentialsConfig: React.FC<DialogCredentialsConfigProps> =
           <h3 className="border-b py-2 pl-2 text-lg font-bold">인증</h3>
           <div className="space-y-6 pl-4">
             <div className="flex flex-col gap-2">
-              <Label className="text-[16px]">Key Registration Method *</Label>
+              <Label className="text-[16px]">
+                Key Registration Method <span className="text-red-500">*</span>
+              </Label>
               <DefaultSelect
                 className="w-full"
                 options={printCredentialType(provider)}
@@ -190,7 +208,9 @@ const DialogCredentialsConfig: React.FC<DialogCredentialsConfigProps> =
               />
             </div>
             <div className="flex flex-col gap-4">
-              <Label className="text-[16px]">Credentials *</Label>
+              <Label className="text-[16px]">
+                Credentials <span className="text-red-500">*</span>
+              </Label>
               <div className="pl-4">
                 {provider && printCredentialComponent(provider)}
               </div>

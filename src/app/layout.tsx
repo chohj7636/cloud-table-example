@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 
-import DialogContainer from '@/widgets/DialogContainer';
+import { Toaster } from '@/shared/components/ui/sonner';
+import DialogContainer from '@/widgets/CloudDialog/DialogContainer';
 
 import { ReactQueryProvider } from './ReactQueryProvider';
 import './globals.css';
@@ -8,6 +9,9 @@ import './globals.css';
 export const metadata: Metadata = {
   title: 'Tatum Cloud Table',
   description: 'Tatum Cloud Table',
+  icons: {
+    icon: '/tatumFavicon.png',
+  },
 };
 
 export default function RootLayout({
@@ -24,6 +28,7 @@ export default function RootLayout({
             {children}
           </div>
           <DialogContainer />
+          <Toaster />
         </ReactQueryProvider>
       </body>
     </html>
