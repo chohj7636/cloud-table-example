@@ -2,7 +2,7 @@ import { GetCloudTableResponse } from './type';
 
 export const getCloudListApi = async (): Promise<GetCloudTableResponse> => {
   try {
-    const response = await fetch('http://localhost:3000/api/cloudList', {
+    const response = await fetch('/api/cloudList', {
       cache: 'no-store',
     });
 
