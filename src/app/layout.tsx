@@ -7,11 +7,8 @@ import { ReactQueryProvider } from './ReactQueryProvider';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Tatum Cloud Table',
-  description: 'Tatum Cloud Table',
-  icons: {
-    icon: '/tatumFavicon.png',
-  },
+  title: 'Cloud Table Example',
+  description: 'Cloud Table Example',
 };
 
 export default function RootLayout({
